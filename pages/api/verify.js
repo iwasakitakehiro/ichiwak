@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         email: verify.identifier,
         emailVerified: new Date(),
         password: password,
-        role: req.query.role,
+        role: verify.role,
       },
     });
     if (!user) {

@@ -1,13 +1,23 @@
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { getSession } from "next-auth/react";
+import { useForm } from "react-hook-form";
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Input,
+  Select,
+  Button,
+} from "@chakra-ui/react";
+
 export default function Login() {
-  const [formData, setFormData] = useState({
-    role: "",
-    name: "",
-    email: "",
-    password: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm();
+
   const [errorMessage, setErrorMessage] = useState(null);
   const [Message, setMessage] = useState(null);
 
@@ -16,14 +26,14 @@ export default function Login() {
     return regex.test(password);
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (formData) => {
     if (!isValidPassword(formData.password)) {
       setErrorMessage(
         "パスワードは8文字以上で英字と数字を組み合わせてください。"
       );
       return;
     }
+
     const response = await fetch("/api/register", {
       method: "POST",
       headers: {
@@ -46,119 +56,101 @@ export default function Login() {
   };
 
   return (
-    <>
-      <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8 mt-20">
-        {Message && (
-          <div
-            className="fixed top-5 left-0 right-0 w-1/2 mx-auto rounded z-[51] items-center bg-green-500 text-white text-sm font-bold px-4 py-3"
+    <div className="relative">
+      {Message && (
+        <div className="w-1/2 mx-auto absolute left-0 right-0 text-center">
+          <Box
+            mx="auto"
+            rounded="md"
+            bg="green.500"
+            color="white"
+            fontSize="sm"
+            fontWeight="bold"
+            px="4"
+            py="3"
             role="alert"
           >
-            <p className="text-sm">{Message}</p>
-          </div>
-        )}
-        <div className="mx-auto max-w-lg">
-          <h1 className="text-center text-2xl font-bold  sm:text-3xl">
-            ユーザー登録
-          </h1>
-
-          <form
-            onSubmit={handleSubmit}
-            className="mb-0 mt-6 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8"
+            {Message}
+          </Box>
+        </div>
+      )}
+      <Box mx="auto" maxW="screen-xl" px="4" py="16" mt="20">
+        <Box mx="auto" maxW="lg">
+          <Box
+            as="h1"
+            textAlign="center"
+            fontSize="2xl"
+            fontWeight="bold"
+            mb="6"
           >
-            <div className="text-center text-lg font-medium">
-              {errorMessage && <p className="text-red-600">{errorMessage}</p>}
-            </div>
+            ユーザー登録
+          </Box>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FormControl id="role" mb="4" hidden>
+              <FormLabel>属性</FormLabel>
+              <Select {...register("role", { required: "属性は必須です。" })}>
+                <option value="JobSeeker">求職者</option>
+              </Select>
+              {errors.role && (
+                <FormErrorMessage>{errors.role.message}</FormErrorMessage>
+              )}
+            </FormControl>
 
-            <div>
-              <label htmlFor="role" className="sr-only">
-                属性
-              </label>
+            <FormControl id="name" mb="4" isInvalid={!!errors.name}>
+              <FormLabel>氏名</FormLabel>
+              <Input
+                {...register("name", { required: "氏名は必須です。" })}
+                placeholder="氏名"
+              />
+              {errors.name && (
+                <FormErrorMessage>{errors.name.message}</FormErrorMessage>
+              )}
+            </FormControl>
 
-              <div className="relative">
-                <select
-                  className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                  id="role"
-                  value={formData.role}
-                  onChange={(e) =>
-                    setFormData({ ...formData, role: e.target.value })
-                  }
-                  required
-                >
-                  <option value="JobSeeker">求職者</option>
-                </select>
-              </div>
-            </div>
+            <FormControl id="email" mb="4" isInvalid={!!errors.email}>
+              <FormLabel>Email</FormLabel>
+              <Input
+                {...register("email", {
+                  required: "メールアドレスは必須です。",
+                })}
+                placeholder="メールアドレス"
+              />
+              {errors.email && (
+                <FormErrorMessage>{errors.email.message}</FormErrorMessage>
+              )}
+            </FormControl>
 
-            <div>
-              <label htmlFor="name" className="sr-only">
-                氏名
-              </label>
+            <FormControl id="password" mb="4" isInvalid={!!errors.password}>
+              <FormLabel>Password</FormLabel>
+              <Input
+                {...register("password", {
+                  required: "パスワードは必須です。",
+                })}
+                placeholder="パスワード"
+                type="password"
+              />
+              {errors.password && (
+                <FormErrorMessage>{errors.password.message}</FormErrorMessage>
+              )}
+            </FormControl>
 
-              <div className="relative">
-                <input
-                  className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                  placeholder="氏名"
-                  type="text"
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  required
-                />
-              </div>
-            </div>
+            <Box textAlign="center" mb="4">
+              {errorMessage && <Box color="red.600">{errorMessage}</Box>}
+            </Box>
 
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email
-              </label>
-
-              <div className="relative">
-                <input
-                  className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                  placeholder="メールアドレス"
-                  type="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-
-              <div className="relative">
-                <input
-                  type="password"
-                  className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                  placeholder="パスワード"
-                  id="password"
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  required
-                />
-              </div>
-            </div>
-
-            <button
+            <Button
+              mt={4}
+              colorScheme="green"
+              isLoading={isSubmitting}
               type="submit"
-              className="block w-full rounded-lg bg-green-500 px-5 py-3 text-sm font-medium text-white"
+              w="full"
             >
               登録
-            </button>
+            </Button>
           </form>
-        </div>
-      </div>
-    </>
+        </Box>
+      </Box>
+    </div>
   );
 }
 

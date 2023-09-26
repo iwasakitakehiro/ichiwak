@@ -199,7 +199,6 @@ export default function RegisterForm() {
   const {
     handleSubmit,
     register,
-    // getValuesを追加
     getValues,
     formState: { errors, isSubmitting },
   } = useForm();

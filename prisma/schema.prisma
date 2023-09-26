@@ -167,8 +167,7 @@ model VerificationToken {
   expires    DateTime
   name       String?
   password   String?
-  role       String?
-
+  role       roreType
   @@unique([identifier, token])
   @@map("verificationtokens")
 }
