@@ -40,7 +40,7 @@ export async function getServerSideProps(context: any) {
   const { token } = context.query;
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/verify?token=${token}`
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/verify?token=${token}`
   );
 
   if (!response.ok) {
