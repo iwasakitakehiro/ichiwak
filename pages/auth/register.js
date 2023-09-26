@@ -79,7 +79,6 @@ export default function Login() {
                   className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                   id="role"
                   value={formData.role}
-                  hidden
                   onChange={(e) =>
                     setFormData({ ...formData, role: e.target.value })
                   }
