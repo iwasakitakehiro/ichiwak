@@ -21,9 +21,12 @@ export default async function handler(req, res) {
         email: verify.identifier,
         emailVerified: new Date(),
         password: password,
-        role: verify.role,
+        role: req.query.role,
       },
     });
+    if (!user) {
+      throw new Error("登録できませんでした");
+    }
 
     await prisma.verificationToken.delete({
       where: {

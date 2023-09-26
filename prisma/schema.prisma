@@ -173,6 +173,12 @@ model VerificationToken {
   @@map("verificationtokens")
 }
 
+enum roreType {
+  Admin
+  JobSeeker
+  Recruiter
+}
+
 model Article {
   id        Int     @id @default(autoincrement())
   title     String
