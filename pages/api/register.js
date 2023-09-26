@@ -27,7 +27,7 @@ export default async function handler(req, res) {
           password: hashedPassword,
         },
       });
-      await sendMail(
+      const send = await sendMail(
         `ichiwak登録認証メール`,
         email,
         `
