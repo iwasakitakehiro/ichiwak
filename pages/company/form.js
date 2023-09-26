@@ -13,7 +13,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 
-export default function RegisterForm(user) {
+export default function RegisterForm({ user }) {
   const [Message, setMessage] = useState(null);
 
   const formFields = [
@@ -69,6 +69,7 @@ export default function RegisterForm(user) {
   // フォームが送信されたときの処理
   const onSubmit = handleSubmit(async (data) => {
     const url = data.logo[0] ? await uploadPhoto(data.logo) : null;
+
     data.logo = url;
     try {
       const response = await fetch("/api/postCompany", {
