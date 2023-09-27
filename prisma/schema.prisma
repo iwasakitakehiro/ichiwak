@@ -50,11 +50,10 @@ model User {
   image         String?
   password   String?
   ruby       String?
-  birthday   String?
+  birthday   DateTime?
   gender     String?
   address    String?
   tel        String?
-  graduation String?
   role       UserRole?
   spouse     Boolean?
   createdAt     DateTime  @default(now()) @map(name: "created_at")
@@ -63,8 +62,9 @@ model User {
   accounts      Account[]
   sessions      Session[]
   applications Application[]
-  companies    Company[] 
-  scoutsReceived Scout[] @relation("UserToScout") 
+  companies    Company[]
+  academicHistories AcademicHistory[]
+  scoutsReceived Scout[] @relation("UserToScout")
   scoutsSent     Scout[] @relation("RecruiterToScout")
   favoritedJobs FavoriteJob[]
   @@map(name: "users")
@@ -204,5 +204,19 @@ model Scout {
   recruiter   User      @relation("RecruiterToScout", fields: [recruiterId], references: [id], onDelete: Cascade)
   user        User      @relation("UserToScout", fields: [userId], references: [id], onDelete: Cascade)
   @@map("scouts")
+}
+
+model AcademicHistory {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entryDate   DateTime? @map("entry_date")
+  graduationDate DateTime? @map("graduation_date")
+  schoolName  String?   @map("school_name")
+  department  String?   @map("department")
+  graduation  String?
+  degree      String?  @map("degree")
+
+  @@index([userId], name: "idx_academic_history_user")
 }
 

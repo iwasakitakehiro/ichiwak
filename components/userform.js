@@ -25,7 +25,7 @@ export const Userform = ({ user }) => {
     {
       label: "氏名",
       name: "name",
-      required: true,
+      required: false,
       requiredMessage: "必須項目です",
       component: "Input",
       type: "text",
@@ -34,7 +34,7 @@ export const Userform = ({ user }) => {
     {
       label: "フリガナ",
       name: "ruby",
-      required: true,
+      required: false,
       requiredMessage: "必須項目です",
       component: "Input",
       type: "text",
@@ -51,10 +51,10 @@ export const Userform = ({ user }) => {
     {
       label: "生年月日",
       name: "birthday",
-      required: true,
+      required: false,
       requiredMessage: "必須項目です",
       component: "Input",
-      type: "text",
+      type: "date",
       defaultValue: user ? user.birthday : "",
     },
     {
@@ -73,7 +73,7 @@ export const Userform = ({ user }) => {
     {
       label: "住所",
       name: "address",
-      required: true,
+      required: false,
       requiredMessage: "必須項目です",
       component: "Input",
       type: "text",
@@ -82,20 +82,11 @@ export const Userform = ({ user }) => {
     {
       label: "電話番号",
       name: "tel",
-      required: true,
+      required: false,
       requiredMessage: "必須項目です",
       component: "Input",
       type: "text",
       defaultValue: user ? user.tel : "",
-    },
-    {
-      label: "最終学歴",
-      name: "graduation",
-      required: true,
-      requiredMessage: "必須項目です",
-      component: "Input",
-      type: "text",
-      defaultValue: user ? user.graduation : "",
     },
     {
       label: "配偶者",
@@ -109,6 +100,86 @@ export const Userform = ({ user }) => {
         { value: "1", label: "あり" },
         { value: "0", label: "なし" },
       ],
+    },
+  ];
+
+  const academicFields = [
+    {
+      label: "学校名",
+      name: "schoolName",
+      required: false,
+      requiredMessage: "必須項目です",
+      component: "Input",
+      type: "text",
+      defaultValue:
+        user && user.academicHistories[0].schoolName
+          ? user.academicHistories[0].schoolName
+          : "",
+    },
+    {
+      label: "学部・学科名",
+      name: "department",
+      required: false,
+      requiredMessage: "必須項目です",
+      component: "Input",
+      type: "text",
+      defaultValue:
+        user && user.academicHistories[0].department
+          ? user.academicHistories[0].department
+          : "",
+    },
+    {
+      label: "学位",
+      name: "degree",
+      required: false,
+      requiredMessage: "",
+      component: "Input",
+      type: "text",
+      defaultValue:
+        user && user.academicHistories[0].degree
+          ? user.academicHistories[0].degree
+          : "",
+    },
+    {
+      label: "在籍",
+      name: "graduation",
+      required: false,
+      requiredMessage: "必須項目です",
+      component: "Radio",
+      type: "text",
+      defaultValue: user.academicHistories[0].graduation
+        ? user.academicHistories[0].graduation === true
+          ? "1"
+          : "0"
+        : "",
+      options: [
+        { value: "1", label: "卒業" },
+        { value: "0", label: "在学中" },
+      ],
+    },
+    {
+      label: "入学年月",
+      name: "entryDate",
+      required: false,
+      requiredMessage: "必須項目です",
+      component: "Input",
+      type: "month",
+      defaultValue:
+        user && user.academicHistories[0].entryDate
+          ? user.academicHistories[0].entryDate.substring(0, 7)
+          : "",
+    },
+    {
+      label: "卒業年月",
+      name: "graduationDate",
+      required: false,
+      requiredMessage: "必須項目です",
+      component: "Input",
+      type: "month",
+      defaultValue:
+        user && user.academicHistories[0].graduationDate
+          ? user.academicHistories[0].graduationDate.substring(0, 7)
+          : "",
     },
   ];
 
@@ -132,7 +203,7 @@ export const Userform = ({ user }) => {
 
       data.image = url;
       const response = await fetch(
-        `/api/updateUser?name=${data.name}&email=${user.email}`,
+        `/api/updateUser?name=${data.name}&name=${data.id}&email=${user.email}`,
         {
           method: "POST",
           headers: {
@@ -143,8 +214,6 @@ export const Userform = ({ user }) => {
       );
       const result = await response.json();
       setMessage(result.message);
-      trigger("session");
-      const updatedSession = await getSession();
       const timer = setTimeout(() => {
         setMessage(null);
       }, 3000);
@@ -244,12 +313,80 @@ export const Userform = ({ user }) => {
             ) : (
               <p>Loading...</p>
             )}
+            {/* 学歴のセクション */}
+            <div className="mt-20">
+              <Box mt={5} as="fieldest">
+                <div>
+                  <div className="text-center font-bold mb-5">
+                    <p>最終学歴</p>
+                  </div>
+                  {academicFields.map((field, index) => {
+                    let Component;
+                    if (field.component === "Textarea") {
+                      Component = Textarea;
+                    } else if (field.component === "Select") {
+                      Component = Select;
+                    } else if (field.component === "Radio") {
+                      Component = RadioGroup;
+                    } else {
+                      Component = Input;
+                    }
 
+                    return (
+                      <FormControl
+                        key={index}
+                        mb={5}
+                        isRequired={field.required}
+                        isInvalid={Boolean(errors[field.name])}
+                      >
+                        <FormLabel htmlFor={field.name}>
+                          {field.label}
+                        </FormLabel>
+                        {field.component === "Radio" ? (
+                          <Controller
+                            name={field.name}
+                            control={control}
+                            defaultValue={field.defaultValue}
+                            render={({ field }) => (
+                              <RadioGroup {...field}>
+                                <Radio value="1">卒業</Radio>
+                                <Radio value="0">在学中</Radio>
+                              </RadioGroup>
+                            )}
+                          />
+                        ) : (
+                          <Component
+                            id={field.name}
+                            type={field.type}
+                            defaultValue={field.defaultValue}
+                            {...register(field.name, {
+                              required: field.required
+                                ? field.requiredMessage
+                                : false,
+                            })}
+                          >
+                            {field.options &&
+                              field.options.map((option, optIndex) => (
+                                <option key={optIndex} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                          </Component>
+                        )}
+                        <FormErrorMessage>
+                          {errors[field.name] && errors[field.name].message}
+                        </FormErrorMessage>
+                      </FormControl>
+                    );
+                  })}
+                </div>
+              </Box>
+            </div>
             <Button
               m="50px auto"
               display="block"
               w="150px"
-              colorScheme="blue"
+              colorScheme="green"
               isLoading={isSubmitting}
               type="submit"
             >

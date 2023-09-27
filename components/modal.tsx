@@ -87,9 +87,9 @@ const Modal: React.FC<ModalProps> = ({ data }) => {
           id="defaultModal"
           tabIndex={-1}
           aria-hidden="true"
-          className="fixed top-0 left-0 right-0 m-0 z-50  w-full overflow-x-hidden overflow-y-auto md:inset-0 max-h-full bg-gray-500 bg-opacity-80"
+          className="fixed top-0 left-0 right-0 m-0 z-50  w-full overflow-x-hidden overflow-y-auto inset-0 max-h-full bg-gray-500 bg-opacity-80"
         >
-          <div className="absolute top-0 left-0 right-0 bottom-0 h-fit m-auto w-full max-w-2xl max-h-full">
+          <div className="absolute top-0 left-0 right-0 bottom-0 h-fit m-auto md:w-full w-[95%] max-w-2xl max-h-full">
             {/* <!-- Modal content --> */}
             <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
               {/* <!-- Modal header --> */}
@@ -130,7 +130,6 @@ const Modal: React.FC<ModalProps> = ({ data }) => {
                 !user.birthday ||
                 !user.gender ||
                 !user.ruby ||
-                !user.graduation ||
                 !user.spouse ||
                 !user.tel ? (
                   <div>
@@ -138,7 +137,6 @@ const Modal: React.FC<ModalProps> = ({ data }) => {
                     {!user.birthday && <p>生年月日</p>}
                     {!user.gender && <p>性別</p>}
                     {!user.ruby && <p>フリガナ</p>}
-                    {!user.graduation && <p>最終学歴</p>}
                     {!user.spouse && <p>配偶者</p>}
                     {!user.tel && <p>電話番号</p>}
                     <p>以上が入力されていませんがよろしいですか?</p>

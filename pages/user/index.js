@@ -69,33 +69,25 @@ export async function getServerSideProps(context) {
             jobs: true,
           },
         },
+        academicHistories: {
+          include: true,
+        },
       },
     });
 
+    function convertDatesToString(obj) {
+      for (let key in obj) {
+        if (obj[key] instanceof Date) {
+          obj[key] = obj[key].toISOString();
+        } else if (typeof obj[key] === "object" && obj[key] !== null) {
+          convertDatesToString(obj[key]);
+        }
+      }
+      return obj;
+    }
+
     if (user) {
-      // UserのDateフィールドを文字列に変換
-      user.createdAt = user.createdAt.toISOString();
-      user.updatedAt = user.updatedAt.toISOString();
-      user.emailVerified = user.emailVerified.toISOString();
-
-      // companiesのDateフィールドを文字列に変換
-      user.companies = user.companies.map((company) => {
-        // 各companyのjobsのDateフィールドも文字列に変換
-        const updatedJobs = company.jobs.map((job) => {
-          return {
-            ...job,
-            createdAt: job.createdAt.toISOString(),
-            updatedAt: job.updatedAt.toISOString(),
-          };
-        });
-
-        return {
-          ...company,
-          jobs: updatedJobs, // 更新されたjobsをcompanyに再代入
-          createdAt: company.createdAt.toISOString(),
-          updatedAt: company.updatedAt.toISOString(),
-        };
-      });
+      user = convertDatesToString(user);
     }
   } catch (error) {
     console.error(error);
