@@ -147,7 +147,7 @@ export default function RegisterForm({ user }) {
           m="50px auto"
           display="block"
           w="150px"
-          colorScheme="blue"
+          colorScheme="green"
           isLoading={isSubmitting}
           type="submit"
         >

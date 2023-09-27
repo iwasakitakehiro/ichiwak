@@ -158,12 +158,12 @@ export default function RegisterForm() {
       type: "text",
     },
     {
-      label: "給与",
+      label: "年収(アルバイトは時給)",
       name: "salary",
       required: true,
       requiredMessage: "必須項目です",
       component: "Input",
-      placeholder: "500　(最低年収を数字だけ記入)",
+      placeholder: "500(数字だけ記入)",
       type: "number",
     },
     {

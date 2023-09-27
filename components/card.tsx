@@ -6,6 +6,7 @@ interface Props {
       id: number;
       title: string;
       name: string;
+      type: string;
       imageUrl?: string;
       company: {
         name: string;
@@ -22,6 +23,7 @@ const CardComponent = ({ job }: { job: Props }) => {
     <div className="w-4/5 mx-auto flex justify-center flex-wrap gap-10">
       {job.map(
         (item: {
+          type: string;
           id: number;
           title: string;
           name: string;
@@ -47,13 +49,18 @@ const CardComponent = ({ job }: { job: Props }) => {
                 />
               </div>
               <div className="p-4 space-y-3">
+                {item.type === "Fulltime" && <p>{item.type}</p>}
+                {item.type === "PartTime" && <p>{item.type}</p>}
+                {item.type === "Contract" && <p>{item.type}</p>}
                 <h2 className="text-lg font-semibold">{item.company.name}</h2>
                 <p>
                   {item.title.length > 30
                     ? item.title.slice(0, 30) + "..."
                     : item.title}
                 </p>
-                <p>給与 : {item.salary}万円~</p>
+                {item.type === "Fulltime" && <p>年収 : {item.salary}万円~</p>}
+                {item.type === "PartTime" && <p>時給 : {item.salary}円~</p>}
+                {item.type === "Contract" && <p>時給 : {item.salary}円~</p>}
                 <p>勤務地 : {item.location}</p>
               </div>
               <div className="p-4 flex justify-center">
