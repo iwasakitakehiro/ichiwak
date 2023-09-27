@@ -49,16 +49,28 @@ const CardComponent = ({ job }: { job: Props }) => {
                 />
               </div>
               <div className="p-4 space-y-3">
-                {item.type === "Fulltime" && <p>{item.type}</p>}
-                {item.type === "PartTime" && <p>{item.type}</p>}
-                {item.type === "Contract" && <p>{item.type}</p>}
+                {item.type === "FullTime" && (
+                  <p className="text-green-500 inline-block w-20 border border-green-500 text-center py-1 rounded text-xs">
+                    正社員
+                  </p>
+                )}
+                {item.type === "PartTime" && (
+                  <p className="text-orange-500 inline-block w-20 border border-orange-500 text-center py-1 rounded text-xs">
+                    アルバイト
+                  </p>
+                )}
+                {item.type === "Contract" && (
+                  <p className="text-blue-500 inline-block w-20 border border-blue-500 text-center py-1 rounded text-xs">
+                    派遣
+                  </p>
+                )}
                 <h2 className="text-lg font-semibold">{item.company.name}</h2>
                 <p>
                   {item.title.length > 30
                     ? item.title.slice(0, 30) + "..."
                     : item.title}
                 </p>
-                {item.type === "Fulltime" && <p>年収 : {item.salary}万円~</p>}
+                {item.type === "FullTime" && <p>年収 : {item.salary}万円~</p>}
                 {item.type === "PartTime" && <p>時給 : {item.salary}円~</p>}
                 {item.type === "Contract" && <p>時給 : {item.salary}円~</p>}
                 <p>勤務地 : {item.location}</p>

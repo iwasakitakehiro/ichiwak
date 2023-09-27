@@ -39,7 +39,9 @@ export default function Job({ job }) {
                   雇用形態
                 </td>
                 <td className="py-5 lg:px-10 px-4 text-gray-700 flex-grow whitespace-pre-line inline-block lg:table-cell leading-7 lg:border-l">
-                  {job.type}
+                  {job.type === "FullTime" && <p>正社員</p>}
+                  {job.type === "PartTime" && <p>アルバイト</p>}
+                  {job.type === "Contract" && <p>派遣</p>}
                 </td>
               </tr>
               <tr className="py-2 border-b flex-col lg:flex-row">
