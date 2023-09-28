@@ -169,8 +169,10 @@ const List = ({ data }) => {
           </Box>
         </FormControl>
       </div>
-
       <div className="my-20">
+        <div className="text-center mb-10  text-4xl font-bold">
+          <p>求人一覧</p>
+        </div>
         <CardCompornent job={jobdata}></CardCompornent>
       </div>
     </>

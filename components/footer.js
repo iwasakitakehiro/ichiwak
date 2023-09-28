@@ -12,10 +12,10 @@ export default function Footer() {
           <NextLink className="hover:border-b" href="/">
             仕事を探す
           </NextLink>
-          <NextLink className="hover:border-b" href="/">
+          <NextLink className="hover:border-b" href="/about">
             いちワクとは
           </NextLink>
-          <NextLink className="hover:border-b" href="/">
+          <NextLink className="hover:border-b" href="/privacy">
             プライバシーポリシー
           </NextLink>
           <NextLink className="hover:border-b" href="/">
