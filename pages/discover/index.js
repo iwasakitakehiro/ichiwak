@@ -1,6 +1,13 @@
 import CardCompornent from "@/components/card";
 import { useState, useEffect } from "react";
-
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Select,
+  Text,
+} from "@chakra-ui/react";
 export const getServerSideProps = async () => {
   try {
     const response = await fetch(
@@ -25,6 +32,7 @@ const List = ({ data }) => {
     industry: "",
   });
   const [jobdata, setData] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setData(data);
@@ -33,6 +41,10 @@ const List = ({ data }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const toggle = () => {
+    setIsSubmitting(true);
   };
 
   const handleSubmit = async (e) => {
@@ -54,6 +66,7 @@ const List = ({ data }) => {
       });
       const responseData = await response.json();
       setData(responseData);
+      setIsSubmitting(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -61,39 +74,48 @@ const List = ({ data }) => {
   return (
     <>
       <div className="p-6 max-w-4xl w-full mx-auto mt-20">
-        <form
+        <FormControl
+          as="form"
           onSubmit={handleSubmit}
-          className="bg-white p-4 rounded shadow-lg"
+          bg="white"
+          p={4}
+          borderRadius="md"
+          shadow="lg"
         >
-          <div className="text-center py-5">
-            <p>検索条件</p>
+          <div className="text-center my-5">
+            <p>条件検索</p>
           </div>
-          <div className="flex justify-center sm:gap-10 gap-2 flex-wrap">
-            <div className="mb-4 w-40">
-              <select
-                name="type"
+          <Box
+            display="flex"
+            justifyContent="center"
+            gap="2.5rem"
+            flexWrap="wrap"
+          >
+            <Box mb={4} w="40">
+              <FormLabel htmlFor="employment-type">雇用形態</FormLabel>
+              <Select
                 id="employment-type"
-                className="p-2 border rounded w-full text-sm"
+                name="type"
                 value={formData.type}
                 onChange={handleChange}
               >
-                <option value="" disabled className="none">
+                <option value="" disabled>
                   雇用形態
                 </option>
                 <option value="FullTime">正社員</option>
                 <option value="PartTime">アルバイト</option>
                 <option value="Contract">派遣</option>
-              </select>
-            </div>
-            <div className="mb-4 w-40">
-              <select
-                name="region"
+              </Select>
+            </Box>
+            <Box mb={4} w="40">
+              <FormLabel htmlFor="region">地域</FormLabel>
+              <Select
                 id="region"
-                className="p-2 border rounded w-full text-sm"
+                name="region"
                 value={formData.region}
                 onChange={handleChange}
               >
-                <option value="" disabled className="none">
+                <option value="" disabled>
                   地域
                 </option>
                 <option value="Ichihara">市原</option>
@@ -107,17 +129,17 @@ const List = ({ data }) => {
                 <option value="Yusyu">有秋</option>
                 <option value="Nansou">南総</option>
                 <option value="Kamo">加茂</option>
-              </select>
-            </div>
-            <div className="mb-4 w-40">
-              <select
-                name="industry"
+              </Select>
+            </Box>
+            <Box mb={4} w="40">
+              <FormLabel htmlFor="job-type">職種</FormLabel>
+              <Select
                 id="job-type"
-                className="p-2 border rounded w-full text-sm"
+                name="industry"
                 value={formData.industry}
                 onChange={handleChange}
               >
-                <option value="" disabled className="none">
+                <option value="" disabled>
                   職種
                 </option>
                 <option value="Service">サービス業</option>
@@ -125,18 +147,24 @@ const List = ({ data }) => {
                 <option value="hairSalon">美容室</option>
                 <option value="Restaurant">飲食業</option>
                 <option value="Childcare">保育士</option>
-              </select>
-            </div>
-          </div>
-          <div className="text-center mt-10">
-            <button
+              </Select>
+            </Box>
+          </Box>
+          <Box textAlign="center" mt={10}>
+            <Button
               type="submit"
-              className="bg-green-500 hover:bg-green-600 max-w-xs w-full text-white py-2 px-4 rounded"
+              colorScheme="green"
+              w="full"
+              maxW="xs"
+              py={2}
+              px={4}
+              borderRadius="md"
+              onClick={toggle}
             >
-              検索
-            </button>
-          </div>
-        </form>
+              {isSubmitting ? <p>検索中...</p> : <p>検索</p>}
+            </Button>
+          </Box>
+        </FormControl>
       </div>
 
       <div className="my-20">
