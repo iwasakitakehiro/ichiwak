@@ -108,7 +108,7 @@ export default function Login() {
             </FormControl>
 
             <FormControl id="email" mb="4" isInvalid={!!errors.email}>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>メールアドレス</FormLabel>
               <Input
                 {...register("email", {
                   required: "メールアドレスは必須です。",
@@ -121,7 +121,7 @@ export default function Login() {
             </FormControl>
 
             <FormControl id="password" mb="4" isInvalid={!!errors.password}>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>パスワード</FormLabel>
               <Input
                 {...register("password", {
                   required: "パスワードは必須です。",
