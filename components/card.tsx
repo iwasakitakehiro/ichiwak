@@ -1,6 +1,7 @@
 import { Image } from "@chakra-ui/react";
 import NextLink from "next/link";
 interface Props {
+  length: number;
   map(
     arg0: (item: {
       id: number;
@@ -21,7 +22,7 @@ interface Props {
 const CardComponent = ({ job }: { job: Props }) => {
   return (
     <div className="w-4/5 mx-auto flex justify-center flex-wrap gap-10">
-      {job.map(
+      {job?.map(
         (item: {
           type: string;
           id: number;
@@ -87,6 +88,7 @@ const CardComponent = ({ job }: { job: Props }) => {
           );
         }
       )}
+      {job?.length === 0 && <div>該当する求人はありません</div>}
     </div>
   );
 };

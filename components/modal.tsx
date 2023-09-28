@@ -50,9 +50,9 @@ const Modal: React.FC<ModalProps> = ({ data }) => {
       });
       const result = await responce.json();
       setMessage(result.message);
+      toggleModal();
       await new Promise((resolve) => setTimeout(resolve, 1500));
       setMessage(null);
-      toggleModal();
     } catch (error) {
       console.error("Error inserting data:", error);
     }

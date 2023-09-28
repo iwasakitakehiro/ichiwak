@@ -54,9 +54,7 @@ const CompanyCard = ({ companies }) => {
               >
                 <div className="flex flex-wrap items-center flex-1 p-4 cursor-pointer select-none justify-end">
                   <div className="flex flex-col items-center justify-center w-10 h-10 mr-4">
-                    <NextLink href="/company">
-                      <img src={imgSrc} className="w-full" alt="companyLogo" />
-                    </NextLink>
+                    <img src={imgSrc} className="w-full" alt="companyLogo" />
                   </div>
                   <div className="flex-1 pl-1 mr-16 ">
                     <div className="font-medium dark:text-white lg:whitespace-normal whitespace-nowrap">
