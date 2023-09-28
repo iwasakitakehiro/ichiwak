@@ -1,19 +1,33 @@
 import CardCompornent from "@/components/card";
 import { useState, useEffect } from "react";
 
-const List = () => {
+export const getServerSideProps = async () => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/getJobList`
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    return { props: { data } };
+  } catch (error) {
+    // エラーログを出力することで、エラーの原因を特定しやすくします。
+    console.error("Error fetching job list:", error);
+    return { notFound: true };
+  }
+};
+
+const List = ({ data }) => {
   const [formData, setFormData] = useState({
     type: "",
     region: "",
     industry: "",
   });
-  const [data, setData] = useState(null);
+  const [jobdata, setData] = useState(null);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/getJobList`)
-      .then((response) => response.json())
-      .then((data) => setData(data))
-      .catch((error) => console.error("Error fetching data:", error));
+    setData(data);
   }, []);
 
   const handleChange = (e) => {
@@ -126,7 +140,7 @@ const List = () => {
       </div>
 
       <div className="my-20">
-        <CardCompornent job={data}></CardCompornent>
+        <CardCompornent job={jobdata}></CardCompornent>
       </div>
     </>
   );
