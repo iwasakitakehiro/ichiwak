@@ -7,7 +7,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import CardCompornent from "@/components/card";
 import NextLink from "next/link";
-import FallModel from "@/components/fallModel";
 
 function Model() {
   const gltf = useGLTF("/glb/ichihara.glb");
@@ -179,9 +178,6 @@ export default function Home() {
           </h2>
         </div>
         <div className="relative">
-          {/* <div className="absolute">
-            <FallModel />
-          </div> */}
           <div className="max-w-7xl m-auto md:text-2xl text-[16px] fade-group">
             <div className="content text-right">
               <div className="line xl:text-right text-center">
