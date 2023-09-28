@@ -22,7 +22,7 @@ interface Props {
 const CardComponent = ({ job }: { job: Props }) => {
   return (
     <>
-      <div className="text-center mb-10 text-4xl font-bold">
+      <div className="text-center mb-10  text-4xl font-bold">
         <p>求人一覧</p>
       </div>
       <div className="w-4/5 mx-auto flex justify-center flex-wrap gap-10">
