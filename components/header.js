@@ -1,12 +1,12 @@
 import NextLink from "next/link";
 import { Image } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import gsap from "gsap";
 import Status from "./status";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useState } from "react";
-
+import { useSession, signOut } from "next-auth/react";
 gsap.registerPlugin(ScrollTrigger);
 gsap.config({
   nullTargetWarn: false,
@@ -29,16 +29,28 @@ export default function Header() {
       });
     });
     setIsLargeScreen(window.innerWidth >= 1024);
-
     const handleResize = () => {
       setIsLargeScreen(window.innerWidth >= 1024);
     };
-
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  const menuRef = useRef(null);
+  const { data: session } = useSession();
+  let imgSrc = session?.user?.image ?? "/images/user-icon.png";
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (menuOpen && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [menuOpen]);
   return (
     <header className="fixed top-0 z-[50] w-full">
       <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
@@ -106,13 +118,20 @@ export default function Header() {
             </div>
           )}
           {menuOpen && (
-            <div className="bg-white dark:bg-gray-800 absolute top-[65px] right-0">
+            <div
+              ref={menuRef}
+              className="bg-white dark:bg-gray-800 absolute top-[65px] right-0"
+            >
               <div className="mx-auto max-w-screen-xl px-4 lg:px-6 py-2.5">
-                <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0 text-center">
+                <ul
+                  className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0 text-center"
+                  id="btn-wrap"
+                >
                   <li>
                     <NextLink
                       href="/"
                       className="block py-5 pr-4 pl-3 lg:p-0 lg:hover:text-green-500"
+                      onClick={() => setMenuOpen(false)}
                     >
                       トップページ
                     </NextLink>
@@ -121,6 +140,7 @@ export default function Header() {
                     <NextLink
                       href="/about"
                       className="block py-5 pr-4 pl-3 text-gray-700 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                      onClick={() => setMenuOpen(false)}
                     >
                       いちワクとは
                     </NextLink>
@@ -129,13 +149,50 @@ export default function Header() {
                     <NextLink
                       href="/discover"
                       className="block py-5 pr-4 pl-3 text-gray-700 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                      onClick={() => setMenuOpen(false)}
                     >
                       仕事を探す
                     </NextLink>
                   </li>
                 </ul>
                 <div className="flex items-center">
-                  <Status />
+                  {session && (
+                    <>
+                      <NextLink
+                        href="/user"
+                        className="w-10 h-10 flex justify-center items-center overflow-hidden rounded-full"
+                        passHref
+                      >
+                        <img className="w-full" src={imgSrc} alt="user logo" />
+                      </NextLink>
+                      <div>
+                        <button
+                          className=" mx-8 inline-block my-3 text-white bg-green-500 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800"
+                          onClick={() => signOut()}
+                        >
+                          ログアウト
+                        </button>
+                      </div>
+                    </>
+                  )}
+                  {!session && (
+                    <>
+                      <NextLink
+                        href="/auth/login"
+                        className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        ログイン
+                      </NextLink>
+                      <NextLink
+                        href="/auth/register"
+                        className="text-white bg-green-500 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        登録
+                      </NextLink>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -145,51 +202,3 @@ export default function Header() {
     </header>
   );
 }
-//   return (
-//     <>
-//       <header>
-//         <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
-//           <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-//             <NextLink href="/" className="flex items-center">
-//               <Image className="w-52" src="/images/ichiwak-logo.png" />
-//             </NextLink>
-//             <div className="flex items-center lg:order-2">
-//               <Status />
-//             </div>
-//             <div
-//               className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
-//               id="mobile-menu-2"
-//             >
-//               <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-//                 <li>
-//                   <NextLink
-//                     href="/"
-//                     className="block py-2 pr-4 pl-3 lg:p-0 lg:hover:text-green-500"
-//                   >
-//                     トップページ
-//                   </NextLink>
-//                 </li>
-//                 <li>
-//                   <NextLink
-//                     href="/about"
-//                     className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
-//                   >
-//                     いちワクとは
-//                   </NextLink>
-//                 </li>
-//                 <li>
-//                   <NextLink
-//                     href="/discover"
-//                     className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
-//                   >
-//                     仕事を探す
-//                   </NextLink>
-//                 </li>
-//               </ul>
-//             </div>
-//           </div>
-//         </nav>
-//       </header>
-//     </>
-//   );
-// }
