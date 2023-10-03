@@ -18,6 +18,14 @@ import {
 export default function EditJob({ job }) {
   const [Message, setMessage] = useState(null);
   const router = useRouter();
+  function validateFileSize(value) {
+    if (value && value[0]) {
+      const fileSize = value[0].size; // ファイルのサイズを取得（bytes単位）
+      const maxSize = 1 * 1024 * 1024; // 1MBをbytes単位で定義
+      return fileSize <= maxSize || "1MB以上の画像は許可されていません。";
+    }
+    return true;
+  }
   const formFields = [
     {
       label: "求人名",
@@ -211,10 +219,8 @@ export default function EditJob({ job }) {
   // フォームが送信されたときの処理
   const onSubmit = handleSubmit(async (data) => {
     try {
-      if (data.imageUrl && data.imageUrl > 0) {
-        const url = await uploadPhoto(data.imageUrl);
-        data.imageUrl = url;
-      }
+      const url = data.imageUrl[0] ? await uploadPhoto(data.imageUrl) : null;
+      data.imageUrl = url;
       const response = await fetch("/api/editJob", {
         method: "POST",
         headers: {
@@ -224,6 +230,10 @@ export default function EditJob({ job }) {
       });
       const result = await response.json();
       setMessage(result.message);
+      const timer = setTimeout(() => {
+        setMessage(null);
+      }, 3000);
+      return () => clearTimeout(timer);
     } catch (error) {
       console.error("Error inserting data:", error);
     }
@@ -234,7 +244,7 @@ export default function EditJob({ job }) {
       <form onSubmit={onSubmit}>
         {Message && (
           <div
-            className="fixed top-5 left-0 right-0 w-1/2 mx-auto rounded z-50 items-center bg-blue-500 text-white text-sm font-bold px-4 py-3"
+            className="fixed top-5 left-0 right-0 w-1/2 mx-auto rounded z-50 items-center bg-green-500 text-white text-sm font-bold px-4 py-3"
             role="alert"
           >
             <p className="text-sm">{Message}</p>
@@ -261,6 +271,29 @@ export default function EditJob({ job }) {
           } else {
             Component = Input;
             additionalProps.type = field.type;
+          }
+          if (field.name === "imageUrl") {
+            return (
+              <FormControl
+                key={field.name}
+                mb={5}
+                isRequired={field.required}
+                isInvalid={Boolean(errors[field.name])}
+              >
+                <FormLabel htmlFor={field.name}>{field.label}</FormLabel>
+                <FormErrorMessage>
+                  {errors[field.name] && errors[field.name].message}
+                </FormErrorMessage>
+                <Input
+                  id={field.name}
+                  type="file"
+                  {...register(field.name, {
+                    required: field.required ? field.requiredMessage : false,
+                    validate: field.validate,
+                  })}
+                />
+              </FormControl>
+            );
           }
           return (
             <FormControl
@@ -314,7 +347,7 @@ export default function EditJob({ job }) {
           m="50px auto"
           display="block"
           w="150px"
-          colorScheme="blue"
+          colorScheme="green"
           isLoading={isSubmitting}
           type="submit"
         >

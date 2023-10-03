@@ -32,7 +32,7 @@ const CompanyCard = ({ companies }) => {
           if (item.logo) {
             imgSrc = item.logo;
           } else {
-            imgSrc = "https://flowbite.com/docs/images/logo.svg";
+            imgSrc = "/images/company-logo.png";
           }
 
           const dateFromDatabase = item.updatedAt;

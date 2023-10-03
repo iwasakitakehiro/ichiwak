@@ -217,6 +217,10 @@ export default function RegisterForm() {
       });
       const result = await response.json();
       setMessage(result.message);
+      const timer = setTimeout(() => {
+        setMessage(null);
+      }, 3000);
+      return () => clearTimeout(timer);
     } catch (error) {
       console.error("Error inserting data:", error);
     }
@@ -227,7 +231,7 @@ export default function RegisterForm() {
       <form onSubmit={onSubmit}>
         {Message && (
           <div
-            className="fixed top-5 left-0 right-0 w-1/2 mx-auto rounded z-50 items-center bg-blue-500 text-white text-sm font-bold px-4 py-3"
+            className="fixed top-5 left-0 right-0 w-1/2 mx-auto rounded z-50 items-center bg-green-500 text-white text-sm font-bold px-4 py-3"
             role="alert"
           >
             <p className="text-sm">{Message}</p>
@@ -267,7 +271,7 @@ export default function RegisterForm() {
                 <Component
                   id={field.name}
                   placeholder={field.placeholder}
-                  type={field.type} // 追加された部分
+                  type={field.type}
                   {...register(field.name, {
                     required: field.required ? field.requiredMessage : false,
                     validate: field.validate,
@@ -294,7 +298,7 @@ export default function RegisterForm() {
           m="50px auto"
           display="block"
           w="150px"
-          colorScheme="blue"
+          colorScheme="green"
           isLoading={isSubmitting}
           type="submit"
         >
