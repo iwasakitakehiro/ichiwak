@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import NextLink from "next/link";
 import Modal from "@/components/modal";
 import { Image } from "@chakra-ui/react";
-import { useState } from "react";
 import { useRouter } from "next/router";
 export default function Job({ job }) {
   const router = useRouter();
@@ -19,7 +17,7 @@ export default function Job({ job }) {
         <div>
           <Image
             className="max-w-lg w-full m-auto"
-            src={imgSrc}
+            src={imgSrc[0]}
             alt="main image"
           />
         </div>

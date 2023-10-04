@@ -19,7 +19,7 @@ interface Props {
   name: string;
 }
 
-const CardComponent = ({ job }: { job: Props }) => {
+const Cards = ({ job }: { job: Props }) => {
   return (
     <>
       <div className="w-4/5 mx-auto flex justify-center flex-wrap gap-10">
@@ -45,7 +45,7 @@ const CardComponent = ({ job }: { job: Props }) => {
               >
                 <div className="flex justify-center items-center p-4">
                   <Image
-                    src={imgSrc}
+                    src={imgSrc[0]}
                     alt="メイン写真"
                     className="h-48 object-cover rounded"
                   />
@@ -95,4 +95,4 @@ const CardComponent = ({ job }: { job: Props }) => {
   );
 };
 
-export default CardComponent;
+export default Cards;

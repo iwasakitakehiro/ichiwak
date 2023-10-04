@@ -3,6 +3,7 @@ import { useState } from "react";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { uploadPhoto } from "@/lib/imagePost";
+import { Image } from "@chakra-ui/react";
 import {
   FormLabel,
   FormControl,
@@ -16,13 +17,34 @@ import {
 
 export default function RegisterForm() {
   const [Message, setMessage] = useState(null);
+  const [inputKey, setInputKey] = useState(Date.now());
+  const [selectedFiles, setSelectedFiles] = useState([]);
+
   const router = useRouter();
 
+  function handleImageChange(event) {
+    const files = event.target.files;
+    const fileArray = Array.from(files);
+    setSelectedFiles((prevFiles) => [...prevFiles, ...fileArray]);
+  }
+  function handleImageRemove(indexToRemove) {
+    setSelectedFiles((prevFiles) =>
+      prevFiles.filter((_, index) => index !== indexToRemove)
+    );
+  }
+
   function validateFileSize(value) {
-    if (value && value[0]) {
-      const fileSize = value[0].size; // ファイルのサイズを取得（bytes単位）
+    if (value && value.length > 0) {
+      if (value.length > 5) {
+        return "5枚以上の画像は許可されていません。";
+      }
       const maxSize = 1 * 1024 * 1024; // 1MBをbytes単位で定義
-      return fileSize <= maxSize || "1MB以上の画像は許可されていません。";
+      for (let i = 0; i < value.length; i++) {
+        const fileSize = value[i].size; // ファイルのサイズを取得（bytes単位）
+        if (fileSize > maxSize) {
+          return "1MB以上の画像は許可されていません。";
+        }
+      }
     }
     return true;
   }
@@ -32,7 +54,7 @@ export default function RegisterForm() {
       label: "求人名",
       name: "title",
       placeholder: "タイトル",
-      required: true,
+      required: false,
       requiredMessage: "必須項目です",
       component: "Input",
       type: "text",
@@ -40,7 +62,7 @@ export default function RegisterForm() {
     {
       label: "求人詳細",
       name: "description",
-      required: true,
+      required: false,
       requiredMessage: "",
       component: "Textarea",
       placeholder: `週休2日制（休日は土日祝日）
@@ -52,7 +74,7 @@ export default function RegisterForm() {
     {
       label: "職種",
       name: "industry",
-      required: true,
+      required: false,
       requiredMessage: "必須項目です",
       component: "Select",
       options: [
@@ -73,11 +95,12 @@ export default function RegisterForm() {
       component: "Input",
       type: "file",
       validate: validateFileSize,
+      multiple: false, // 追加
     },
     {
       label: "雇用形態",
       name: "type",
-      required: true,
+      required: false,
       requiredMessage: "必須項目です",
       component: "Select",
       options: [
@@ -91,7 +114,7 @@ export default function RegisterForm() {
     {
       label: "地域",
       name: "region",
-      required: true,
+      required: false,
       requiredMessage: "必須項目です",
       component: "Select",
       options: [
@@ -113,7 +136,7 @@ export default function RegisterForm() {
     {
       label: "勤務地",
       name: "location",
-      required: true,
+      required: false,
       requiredMessage: "必須項目です",
       component: "Input",
       placeholder: "千葉県市原市市原1-1-1",
@@ -133,7 +156,7 @@ export default function RegisterForm() {
     {
       label: "勤務時間開始",
       name: "start_time",
-      required: true,
+      required: false,
       requiredMessage: "必須項目です",
       component: "Input",
       type: "time",
@@ -141,7 +164,7 @@ export default function RegisterForm() {
     {
       label: "勤務時間終了",
       name: "finish_time",
-      required: true,
+      required: false,
       requiredMessage: "必須項目です",
       component: "Input",
       type: "time",
@@ -160,7 +183,7 @@ export default function RegisterForm() {
     {
       label: "年収(アルバイトは時給)",
       name: "salary",
-      required: true,
+      required: false,
       requiredMessage: "必須項目です",
       component: "Input",
       placeholder: "500(数字だけ記入)",
@@ -177,7 +200,7 @@ export default function RegisterForm() {
     {
       label: "福利厚生",
       name: "welfare",
-      required: true,
+      required: false,
       requiredMessage: "",
       component: "Textarea",
       type: "text",
@@ -185,7 +208,7 @@ export default function RegisterForm() {
     {
       label: "休日・休暇",
       name: "vacation",
-      required: true,
+      required: false,
       requiredMessage: "",
       component: "Textarea",
       placeholder: `週休2日制（休日は土日祝日）
@@ -206,8 +229,11 @@ export default function RegisterForm() {
   // フォームが送信されたときの処理
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const url = data.imageUrl[0] ? await uploadPhoto(data.imageUrl) : null;
-      data.imageUrl = url;
+      if (selectedFiles.length > 0) {
+        const urls = await uploadPhoto(selectedFiles);
+        data.imageUrl = urls;
+      }
+
       const response = await fetch("/api/postJob", {
         method: "POST",
         headers: {
@@ -268,15 +294,60 @@ export default function RegisterForm() {
                 {errors[field.name] && errors[field.name].message}
               </FormErrorMessage>
               {field.component !== "Select" ? (
-                <Component
-                  id={field.name}
-                  placeholder={field.placeholder}
-                  type={field.type}
-                  {...register(field.name, {
-                    required: field.required ? field.requiredMessage : false,
-                    validate: field.validate,
-                  })}
-                />
+                <>
+                  {field.name === "imageUrl" ? (
+                    <>
+                      <Component
+                        id={field.name}
+                        placeholder={field.placeholder}
+                        type={field.type}
+                        multiple={field.multiple}
+                        key={inputKey}
+                        {...register(field.name, {
+                          required: field.required
+                            ? field.requiredMessage
+                            : false,
+                          validate: field.validate,
+                        })}
+                        onChange={(e) => {
+                          handleImageChange(e);
+                          field.onChange && field.onChange(e);
+                        }}
+                      />
+                      <div className="preview">
+                        <p className="mb-3 mt-2 text-green-500">
+                          アップロードする画像
+                        </p>
+                        <div className="flex">
+                          {selectedFiles.map((file, index) => (
+                            <Image
+                              key={index}
+                              src={URL.createObjectURL(file)}
+                              alt={`Preview ${index}`}
+                              style={{
+                                width: "auto",
+                                height: "60px",
+                                marginRight: "10px",
+                              }}
+                              onClick={() => handleImageRemove(index)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <Component
+                      id={field.name}
+                      placeholder={field.placeholder}
+                      type={field.type}
+                      {...register(field.name, {
+                        required: field.required
+                          ? field.requiredMessage
+                          : false,
+                      })}
+                    />
+                  )}
+                </>
               ) : (
                 <Component
                   id={field.name}

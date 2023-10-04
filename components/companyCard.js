@@ -3,7 +3,7 @@ import NextLink from "next/link";
 
 const CompanyCard = ({ companies }) => {
   // アコーディオンの開閉状態を格納する配列
-  const [isOpenArray, setIsOpenArray] = useState(companies.map(() => true));
+  const [isOpenArray, setIsOpenArray] = useState(companies.map(() => false));
 
   return (
     <div className="mt-56 container flex flex-col items-center justify-center max-w-4xl  lg:w-full w-[90%] mx-auto bg-white rounded-lg shadow dark:bg-gray-800">

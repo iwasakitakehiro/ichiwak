@@ -1,4 +1,4 @@
-import CardCompornent from "@/components/card";
+import Cards from "@/components/card";
 import { useState, useEffect } from "react";
 import {
   Box,
@@ -36,7 +36,7 @@ const List = ({ data }) => {
 
   useEffect(() => {
     setData(data);
-  }, []);
+  }, [data]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -173,7 +173,7 @@ const List = ({ data }) => {
         <div className="text-center mb-10  text-4xl font-bold">
           <p>求人一覧</p>
         </div>
-        <CardCompornent job={jobdata}></CardCompornent>
+        <Cards job={jobdata}></Cards>
       </div>
     </>
   );
