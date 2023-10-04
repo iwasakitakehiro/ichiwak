@@ -20,6 +20,7 @@
     "@react-three/cannon": "^6.6.0",
     "@react-three/drei": "^9.85.0",
     "@react-three/fiber": "^8.14.3",
+    "@splidejs/react-splide": "^0.7.12",
     "aws-sdk": "^2.1464.0",
     "bcrypt": "^5.1.1",
     "gsap": "^3.12.2",

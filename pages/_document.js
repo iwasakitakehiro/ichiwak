@@ -10,7 +10,7 @@ class MyDocument extends Document {
             src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
           ></script>
         </Head>
-        <body>
+        <body className="bg-gray-100">
           <Main />
           <NextScript />
         </body>

@@ -2,10 +2,12 @@ import { prisma } from "@/lib/prisma";
 import Modal from "@/components/modal";
 import { Image } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
+import "@splidejs/splide/css";
+
 export default function Job({ job }) {
   const router = useRouter();
-  let imgSrc = job.imageUrl ?? "/images/AdobeStock_101676859.jpeg";
-
+  let imgSrc = job.imageUrl ?? ["/images/AdobeStock_101676859.jpeg"];
   return (
     <>
       <div className="max-w-7xl lg:w-2/3 w-[90%] mx-auto my-36">
@@ -15,11 +17,22 @@ export default function Job({ job }) {
           </h1>
         </div>
         <div>
-          <Image
-            className="max-w-lg w-full m-auto"
-            src={imgSrc[0]}
-            alt="main image"
-          />
+          <Splide
+            options={{
+              autoplay: false,
+            }}
+          >
+            {imgSrc.length > 0 &&
+              imgSrc.map((item, index) => (
+                <SplideSlide key={index} className="flex">
+                  <Image
+                    className="max-w-lg w-full m-auto"
+                    src={item}
+                    alt={`index${index}`}
+                  />
+                </SplideSlide>
+              ))}
+          </Splide>
         </div>
         <div className="bg-white border border-gray-200 my-12">
           <table className="divide-y divide-gray-200 w-full">
@@ -100,15 +113,6 @@ export default function Job({ job }) {
 
 export async function getServerSideProps(context) {
   const { id } = context.query;
-  const { company } = context.query;
-  const job = await prisma.job.findUnique({
-    where: {
-      id: Number(id),
-    },
-    include: {
-      company: true,
-    },
-  });
 
   try {
     const job = await prisma.job.findUnique({
@@ -119,11 +123,13 @@ export async function getServerSideProps(context) {
         company: true,
       },
     });
+
     if (!job) {
       return {
         notFound: true, // 404ページを表示
       };
     }
+
     const serializedJob = {
       ...job,
       createdAt: job.createdAt.toISOString(),
@@ -134,6 +140,7 @@ export async function getServerSideProps(context) {
         updatedAt: job.company.updatedAt.toISOString(),
       },
     };
+
     return {
       props: { job: serializedJob },
     };

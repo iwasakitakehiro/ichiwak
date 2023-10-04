@@ -4,6 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { uploadPhoto } from "@/lib/imagePost";
+import { Image } from "@chakra-ui/react";
 import {
   FormLabel,
   FormControl,
@@ -18,13 +19,33 @@ import {
 export default function EditJob({ job }) {
   const [Message, setMessage] = useState(null);
   const router = useRouter();
+  const [inputKey, setInputKey] = useState(Date.now());
+  const [selectedFiles, setSelectedFiles] = useState(job.imageUrl || []);
+
   function validateFileSize(value) {
-    if (value && value[0]) {
-      const fileSize = value[0].size; // ファイルのサイズを取得（bytes単位）
+    if (value && value.length > 0) {
+      if (value.length > 3) {
+        return "3枚以上の画像は許可されていません。";
+      }
       const maxSize = 1 * 1024 * 1024; // 1MBをbytes単位で定義
-      return fileSize <= maxSize || "1MB以上の画像は許可されていません。";
+      for (let i = 0; i < value.length; i++) {
+        const fileSize = value[i].size; // ファイルのサイズを取得（bytes単位）
+        if (fileSize > maxSize) {
+          return "1MB以上の画像は許可されていません。";
+        }
+      }
     }
     return true;
+  }
+  function handleImageChange(event) {
+    const files = event.target.files;
+    const fileArray = Array.from(files);
+    setSelectedFiles((prevFiles) => [...prevFiles, ...fileArray]);
+  }
+  function handleImageRemove(indexToRemove) {
+    setSelectedFiles((prevFiles) =>
+      prevFiles.filter((_, index) => index !== indexToRemove)
+    );
   }
   const formFields = [
     {
@@ -74,6 +95,8 @@ export default function EditJob({ job }) {
       requiredMessage: "",
       component: "Input",
       type: "file",
+      validate: validateFileSize,
+      multiple: true,
     },
     {
       label: "雇用形態",
@@ -219,8 +242,18 @@ export default function EditJob({ job }) {
   // フォームが送信されたときの処理
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const url = data.imageUrl[0] ? await uploadPhoto(data.imageUrl) : null;
-      data.imageUrl = url;
+      const newFiles = selectedFiles.filter((file) => typeof file !== "string");
+      let allImageUrls = [
+        ...selectedFiles.filter((file) => typeof file === "string"),
+      ];
+
+      if (newFiles.length > 0) {
+        const newUrls = await uploadPhoto(newFiles);
+        allImageUrls = [...allImageUrls, ...newUrls];
+      }
+
+      data.imageUrl = allImageUrls;
+
       const response = await fetch("/api/editJob", {
         method: "POST",
         headers: {
@@ -286,12 +319,45 @@ export default function EditJob({ job }) {
                 </FormErrorMessage>
                 <Input
                   id={field.name}
-                  type="file"
+                  multiple={field.multiple}
+                  type={field.type}
+                  key={inputKey}
                   {...register(field.name, {
                     required: field.required ? field.requiredMessage : false,
                     validate: field.validate,
                   })}
+                  onChange={(e) => {
+                    handleImageChange(e);
+                    field.onChange && field.onChange(e);
+                  }}
                 />
+                <div className="preview">
+                  <p className="mb-3 mt-2 text-green-500">
+                    アップロードする画像
+                  </p>
+                  <div className="flex">
+                    {selectedFiles.map((file, index) => {
+                      const src =
+                        typeof file === "string"
+                          ? file
+                          : URL.createObjectURL(file);
+
+                      return (
+                        <Image
+                          key={index}
+                          src={src}
+                          alt={`Preview ${index}`}
+                          style={{
+                            width: "auto",
+                            height: "60px",
+                            marginRight: "10px",
+                          }}
+                          onClick={() => handleImageRemove(index)}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
               </FormControl>
             );
           }

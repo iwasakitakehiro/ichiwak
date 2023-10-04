@@ -35,8 +35,8 @@ export default function RegisterForm() {
 
   function validateFileSize(value) {
     if (value && value.length > 0) {
-      if (value.length > 5) {
-        return "5枚以上の画像は許可されていません。";
+      if (value.length > 3) {
+        return "3枚以上の画像は許可されていません。";
       }
       const maxSize = 1 * 1024 * 1024; // 1MBをbytes単位で定義
       for (let i = 0; i < value.length; i++) {
@@ -95,7 +95,7 @@ export default function RegisterForm() {
       component: "Input",
       type: "file",
       validate: validateFileSize,
-      multiple: false, // 追加
+      multiple: true,
     },
     {
       label: "雇用形態",

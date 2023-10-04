@@ -52,8 +52,8 @@ export default function Header() {
     };
   }, [menuOpen]);
   return (
-    <header className="fixed top-0 z-[50] w-full">
-      <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
+    <header className="fixed top-0 z-[50] w-full ">
+      <nav className="bg-white bg-opacity-40 border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl rerative">
           <NextLink href="/" className="flex items-center">
             <Image className="w-52" src="/images/ichiwak-logo.png" />
@@ -120,7 +120,7 @@ export default function Header() {
           {menuOpen && (
             <div
               ref={menuRef}
-              className="bg-white dark:bg-gray-800 absolute top-[65px] right-0"
+              className="bg-white bg-opacity-40 dark:bg-gray-800 absolute top-[65px] right-0"
             >
               <div className="mx-auto max-w-screen-xl px-4 lg:px-6 py-2.5">
                 <ul

@@ -8,7 +8,7 @@ interface Props {
       title: string;
       name: string;
       type: string;
-      imageUrl?: string;
+      imageUrl: string;
       company: {
         name: string;
       };
@@ -29,25 +29,26 @@ const Cards = ({ job }: { job: Props }) => {
             id: number;
             title: string;
             name: string;
-            imageUrl?: string;
+            imageUrl: string;
             company: {
               name: string;
             };
             salary: string;
             location: string;
           }) => {
-            let imgSrc: string =
-              item.imageUrl ?? "/images/AdobeStock_101676859.jpeg";
+            let imgSrc: string = item.imageUrl[0]
+              ? item.imageUrl[0]
+              : "/images/AdobeStock_101676859.jpeg";
             return (
               <div
                 key={item.id}
                 className="w-80 bg-white shadow-lg rounded-lg overflow-hidden fade-group"
               >
-                <div className="flex justify-center items-center p-4">
+                <div className="h-48 w-full flex justify-center items-center p-4">
                   <Image
-                    src={imgSrc[0]}
+                    src={imgSrc}
                     alt="メイン写真"
-                    className="h-48 object-cover rounded"
+                    className="object-cover rounded"
                   />
                 </div>
                 <div className="p-4 space-y-3">
