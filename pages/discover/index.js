@@ -99,7 +99,7 @@ const List = ({ data }) => {
                   value={formData.type}
                   onChange={handleChange}
                 >
-                  <option value="" disabled>
+                  <option className="text-slate-400" value="">
                     雇用形態
                   </option>
                   <option value="FullTime">正社員</option>
@@ -116,7 +116,7 @@ const List = ({ data }) => {
                   value={formData.region}
                   onChange={handleChange}
                 >
-                  <option value="" disabled>
+                  <option className="text-slate-400" value="">
                     地域
                   </option>
                   <option value="Ichihara">市原</option>
@@ -141,7 +141,7 @@ const List = ({ data }) => {
                   value={formData.industry}
                   onChange={handleChange}
                 >
-                  <option value="" disabled>
+                  <option className="text-slate-400" value="">
                     職種
                   </option>
                   <option value="Service">サービス業</option>
