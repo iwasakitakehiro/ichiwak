@@ -44,7 +44,7 @@ const Cards = ({ job }: { job: Props }) => {
                 key={item.id}
                 className="w-80 bg-white shadow-lg rounded-lg overflow-hidden fade-group"
               >
-                <div className="h-48 w-full flex justify-center items-center p-4">
+                <div className="h-48 flex justify-center items-center m-4 overflow-hidden">
                   <Image
                     src={imgSrc}
                     alt="メイン写真"
