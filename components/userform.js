@@ -224,7 +224,7 @@ export const Userform = ({ user }) => {
   });
   return (
     <>
-      <div className="lg:w-1/2 w-[90%] mx-auto">
+      <div className="lg:w-1/2 w-[90%] mx-auto bg-white py-10 my-20 rounded-3xl">
         <h2 className="text-center mt-20 text-xl font-bold">
           プロフィール編集
         </h2>

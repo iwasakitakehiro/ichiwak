@@ -7,12 +7,12 @@ const CompanyCard = ({ companies }) => {
 
   return (
     <div className="mt-56 container flex flex-col items-center justify-center max-w-4xl  lg:w-full w-[90%] mx-auto bg-white rounded-lg shadow dark:bg-gray-800">
-      <div className="flex flex-wrap w-full px-4 py-5 border-b sm:px-6 bg-gray-100 justify-end">
+      <div className="flex flex-wrap w-full px-4 py-5 border-b sm:px-6 bg-gray-200 justify-end rounded-ss-lg rounded-se-lg">
         <div className="w-full">
-          <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+          <h3 className="text-lg font-medium leading-6 text-gray-900">
             会社情報
           </h3>
-          <p className="max-w-2xl mt-1 text-sm text-gray-500 dark:text-gray-200">
+          <p className="max-w-2xl mt-1 text-sm text-gray-500">
             求人を募集する会社を登録してください
           </p>
         </div>

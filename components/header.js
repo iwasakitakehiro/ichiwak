@@ -53,7 +53,7 @@ export default function Header() {
   }, [menuOpen]);
   return (
     <header className="fixed top-0 z-[50] w-full ">
-      <nav className="bg-white bg-opacity-40 border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
+      <nav className="bg-white bg-opacity-40 border-gray-200 px-4 lg:px-6 py-2.5">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl rerative">
           <NextLink href="/" className="flex items-center">
             <Image className="w-52" src="/images/ichiwak-logo.png" />
@@ -101,7 +101,7 @@ export default function Header() {
                 <li>
                   <NextLink
                     href="/about"
-                    className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                    className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0"
                   >
                     いちワクとは
                   </NextLink>
@@ -109,7 +109,7 @@ export default function Header() {
                 <li>
                   <NextLink
                     href="/discover"
-                    className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                    className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 "
                   >
                     仕事を探す
                   </NextLink>
@@ -120,7 +120,7 @@ export default function Header() {
           {menuOpen && (
             <div
               ref={menuRef}
-              className="bg-white bg-opacity-40 dark:bg-gray-800 absolute top-[65px] right-0"
+              className="bg-white bg-opacity-40  absolute top-[65px] right-0"
             >
               <div className="mx-auto max-w-screen-xl px-4 lg:px-6 py-2.5">
                 <ul
@@ -139,7 +139,7 @@ export default function Header() {
                   <li>
                     <NextLink
                       href="/about"
-                      className="block py-5 pr-4 pl-3 text-gray-700 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                      className="block py-5 pr-4 pl-3 text-gray-700 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 "
                       onClick={() => setMenuOpen(false)}
                     >
                       いちワクとは
@@ -148,7 +148,7 @@ export default function Header() {
                   <li>
                     <NextLink
                       href="/discover"
-                      className="block py-5 pr-4 pl-3 text-gray-700 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                      className="block py-5 pr-4 pl-3 text-gray-700 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 "
                       onClick={() => setMenuOpen(false)}
                     >
                       仕事を探す
@@ -167,7 +167,7 @@ export default function Header() {
                       </NextLink>
                       <div>
                         <button
-                          className=" mx-8 inline-block my-3 text-white bg-green-500 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800"
+                          className=" mx-8 inline-block my-3 text-white bg-green-500 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 "
                           onClick={() => signOut()}
                         >
                           ログアウト
@@ -179,14 +179,14 @@ export default function Header() {
                     <>
                       <NextLink
                         href="/auth/login"
-                        className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+                        className="text-gray-800 "
                         onClick={() => setMenuOpen(false)}
                       >
                         ログイン
                       </NextLink>
                       <NextLink
                         href="/auth/register"
-                        className="text-white bg-green-500 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800"
+                        className="text-white bg-green-500 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 "
                         onClick={() => setMenuOpen(false)}
                       >
                         登録
