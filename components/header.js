@@ -38,46 +38,78 @@ export default function Header() {
     };
   }, []);
   const menuRef = useRef(null);
+  // useEffect(() => {
+  //   const handleOutsideClick = (event) => {
+  //     if (menuOpen && !event.target.dataset.id === "close") {
+  //       setMenuOpen(false);
+  //     }
+  //     if (menuOpen) {
+  //       document.addEventListener("mousedown", (e) => {
+  //         handleOutsideClick(e);
+  //       });
+  //     } else {
+  //       document.removeEventListener("mousedown", (e) => {
+  //         handleOutsideClick(e);
+  //       });
+  //     }
+  //     return () => {
+  //       document.removeEventListener("mousedown", (e) => {
+  //         handleOutsideClick(e);
+  //       });
+  //     };
+  //   };
+  // }, [menuOpen]);
+
   const { data: session } = useSession();
   let imgSrc = session?.user?.image ?? "/images/user-icon.png";
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (menuOpen && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [menuOpen]);
+
   return (
     <header className="fixed top-0 z-[50] w-full ">
       <nav className="bg-white bg-opacity-40 border-gray-200 px-4 lg:px-6 py-2.5">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl rerative">
           <NextLink href="/" className="flex items-center">
-            <Image className="w-52" src="/images/ichiwak-logo.png" />
+            <Image className="w-52" src="/images/ichiwak-logo.png" alt="logo" />
           </NextLink>
           <div className="flex items-center lg:hidden">
-            <button onClick={() => setMenuOpen(!menuOpen)}>
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+            {menuOpen ? (
+              <button
+                onClick={() => {
+                  setMenuOpen(!menuOpen);
+                }}
               >
-                {menuOpen ? (
-                  <path d="M6 18L18 6M6 6l12 12"></path>
-                ) : (
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path data-id="close" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setMenuOpen(!menuOpen);
+                }}
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
                   <>
                     <path d="M4 6h16M4 12h16m-7 6h7"></path>
                   </>
-                )}
-              </svg>
-            </button>
+                </svg>
+              </button>
+            )}
           </div>
           {isLargeScreen && (
             <div className="flex items-center lg:order-2">
@@ -120,7 +152,7 @@ export default function Header() {
           {menuOpen && (
             <div
               ref={menuRef}
-              className="bg-white bg-opacity-40  absolute top-[65px] right-0"
+              className="bg-gray-100 absolute top-[66px] right-0 min-w-[200px]"
             >
               <div className="mx-auto max-w-screen-xl px-4 lg:px-6 py-2.5">
                 <ul
@@ -130,7 +162,7 @@ export default function Header() {
                   <li>
                     <NextLink
                       href="/"
-                      className="block py-5 pr-4 pl-3 lg:p-0 lg:hover:text-green-500"
+                      className="block py-5 pr-4 pl-3 lg:p-0 lg:hover:text-green-500 text-left"
                       onClick={() => setMenuOpen(false)}
                     >
                       トップページ
@@ -139,7 +171,7 @@ export default function Header() {
                   <li>
                     <NextLink
                       href="/about"
-                      className="block py-5 pr-4 pl-3 text-gray-700 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 "
+                      className="block py-5 pr-4 pl-3 text-gray-700  text-left hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 "
                       onClick={() => setMenuOpen(false)}
                     >
                       いちワクとは
@@ -148,7 +180,7 @@ export default function Header() {
                   <li>
                     <NextLink
                       href="/discover"
-                      className="block py-5 pr-4 pl-3 text-gray-700 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 "
+                      className="block py-5 pr-4 pl-3 text-gray-700  text-left hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 "
                       onClick={() => setMenuOpen(false)}
                     >
                       仕事を探す
@@ -163,7 +195,11 @@ export default function Header() {
                         className="w-10 h-10 flex justify-center items-center overflow-hidden rounded-full"
                         passHref
                       >
-                        <img className="w-full" src={imgSrc} alt="user logo" />
+                        <Image
+                          className="w-full"
+                          src={imgSrc}
+                          alt="user logo"
+                        />
                       </NextLink>
                       <div>
                         <button
@@ -177,20 +213,22 @@ export default function Header() {
                   )}
                   {!session && (
                     <>
-                      <NextLink
-                        href="/auth/login"
-                        className="text-gray-800 "
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        ログイン
-                      </NextLink>
-                      <NextLink
-                        href="/auth/register"
-                        className="text-white bg-green-500 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 "
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        登録
-                      </NextLink>
+                      <div className="flex gap-5 items-center justify-center w-full pt-6">
+                        <NextLink
+                          href="/auth/login"
+                          className="text-gray-800 bg-gray-200 px-3 py-2 lg:py-2.5 rounded-lg text-sm"
+                          onClick={() => setMenuOpen(false)}
+                        >
+                          ログイン
+                        </NextLink>
+                        <NextLink
+                          href="/auth/register"
+                          className="text-white bg-green-500 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 "
+                          onClick={() => setMenuOpen(false)}
+                        >
+                          登録
+                        </NextLink>
+                      </div>
                     </>
                   )}
                 </div>

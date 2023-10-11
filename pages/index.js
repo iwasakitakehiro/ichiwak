@@ -169,7 +169,9 @@ export default function Home() {
                 </span>
                 ワクワク
                 <br />
-                <span className="sm:text-4xl leading-none block">×</span>
+                <span className="sm:text-4xl text-lg leading-none block">
+                  ×
+                </span>
                 WORK
                 <br />
               </p>

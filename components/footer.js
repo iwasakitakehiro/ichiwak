@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <>
       <footer className="bg-green-500 sm:py-20 py-14 mt-56">
-        <nav className="text-white w-2/3 m-auto flex flex-wrap sm:gap-10 gap-7 text-sm text-xs">
+        <nav className="text-white w-2/3 m-auto flex flex-wrap sm:gap-10 gap-7 sm:text-sm text-xs">
           <NextLink className="hover:border-b" href="/">
             トップページ
           </NextLink>
