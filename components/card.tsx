@@ -48,7 +48,7 @@ const Cards = ({ job }: { job: Props }) => {
                   <Image
                     src={imgSrc}
                     alt="メイン写真"
-                    className="object-cover rounded"
+                    className="object-cover rounded h-full"
                   />
                 </div>
                 <div className="p-4 space-y-3">

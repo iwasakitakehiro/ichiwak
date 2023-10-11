@@ -56,7 +56,7 @@ export default function Login() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative bg-white sm:my-40 my-28 max-w-3xl mx-auto rounded-2xl w-11/12 ">
       {Message && (
         <div className="w-1/2 mx-auto absolute left-0 right-0 text-center">
           <Box

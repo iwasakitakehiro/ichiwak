@@ -38,7 +38,7 @@ export default function Job({ job }) {
           <table className="divide-y divide-gray-200 w-full">
             <tbody>
               <tr className="py-2 border-b flex-col lg:flex-row">
-                <td className="align-baseline shrink-0 font-semibold whitespace-nowrap px-4 mb-2 md:mb-0 w-52 border-b md:border-r inline-block lg:table-cell lg:w-auto w-full text-center py-5">
+                <td className="align-baseline shrink-0 font-semibold whitespace-nowrap px-4 mb-2 md:mb-0  border-b md:border-r inline-block lg:table-cell lg:w-auto w-full text-center py-5">
                   求人の詳細
                 </td>
                 <td className="py-5 lg:px-10 px-4 text-gray-700 flex-grow whitespace-pre-line inline-block lg:table-cell leading-7 lg:border-l">
@@ -46,7 +46,7 @@ export default function Job({ job }) {
                 </td>
               </tr>
               <tr className="py-2 border-b flex-col lg:flex-row">
-                <td className="align-baseline shrink-0 font-semibold whitespace-nowrap px-4 mb-2 md:mb-0 w-52 border-b md:border-r inline-block lg:table-cell lg:w-auto w-full text-center py-5">
+                <td className="align-baseline shrink-0 font-semibold whitespace-nowrap px-4 mb-2 md:mb-0  border-b md:border-r inline-block lg:table-cell lg:w-auto w-full text-center py-5">
                   雇用形態
                 </td>
                 <td className="py-5 lg:px-10 px-4 text-gray-700 flex-grow whitespace-pre-line inline-block lg:table-cell leading-7 lg:border-l">
@@ -56,7 +56,7 @@ export default function Job({ job }) {
                 </td>
               </tr>
               <tr className="py-2 border-b flex-col lg:flex-row">
-                <td className="align-baseline shrink-0 font-semibold whitespace-nowrap px-4 mb-2 md:mb-0 w-52 border-b md:border-r inline-block lg:table-cell lg:w-auto w-full text-center py-5">
+                <td className="align-baseline shrink-0 font-semibold whitespace-nowrap px-4 mb-2 md:mb-0  border-b md:border-r inline-block lg:table-cell lg:w-auto w-full text-center py-5">
                   勤務地
                 </td>
                 <td className="py-5 lg:px-10 px-4 text-gray-700 flex-grow whitespace-pre-line leading-7 inline-block lg:table-cell">
@@ -64,7 +64,7 @@ export default function Job({ job }) {
                 </td>
               </tr>
               <tr className="py-2 border-b flex-col lg:flex-row">
-                <td className="align-baseline shrink-0 font-semibold whitespace-nowrap px-4 mb-2 md:mb-0 w-52 border-b md:border-r inline-block lg:table-cell lg:w-auto w-full text-center py-5">
+                <td className="align-baseline shrink-0 font-semibold whitespace-nowrap px-4 mb-2 md:mb-0  border-b md:border-r inline-block lg:table-cell lg:w-auto w-full text-center py-5">
                   勤務時間
                 </td>
                 <td className="py-5 lg:px-10 px-4 text-gray-700 flex-grow whitespace-pre-line inline-block lg:table-cell leading-7 lg:border-l">
@@ -77,7 +77,7 @@ export default function Job({ job }) {
                 </td>
               </tr>
               <tr className="py-2 border-b flex-col lg:flex-row">
-                <td className="align-baseline shrink-0 font-semibold whitespace-nowrap px-4 mb-2 md:mb-0 w-52 border-b md:border-r inline-block lg:table-cell lg:w-auto w-full text-center py-5">
+                <td className="align-baseline shrink-0 font-semibold whitespace-nowrap px-4 mb-2 md:mb-0  border-b md:border-r inline-block lg:table-cell lg:w-auto w-full text-center py-5">
                   給与
                 </td>
                 <td className="py-5 lg:px-10 px-4 text-gray-700 flex-grow whitespace-pre-line leading-7 inline-block lg:table-cell">
@@ -85,7 +85,7 @@ export default function Job({ job }) {
                 </td>
               </tr>
               <tr className="py-2 border-b flex-col lg:flex-row">
-                <td className="align-baseline shrink-0 font-semibold whitespace-nowrap px-4 mb-2 md:mb-0 w-52 border-b md:border-r inline-block lg:table-cell lg:w-auto w-full text-center py-5">
+                <td className="align-baseline shrink-0 font-semibold whitespace-nowrap px-4 mb-2 md:mb-0  border-b md:border-r inline-block lg:table-cell lg:w-auto w-full text-center py-5">
                   福利厚生
                 </td>
                 <td className="py-5 lg:px-10 px-4 text-gray-700 flex-grow whitespace-pre-line leading-7 inline-block lg:table-cell">
@@ -93,7 +93,7 @@ export default function Job({ job }) {
                 </td>
               </tr>
               <tr className="py-2 border-b flex-col lg:flex-row">
-                <td className="align-baseline shrink-0 font-semibold whitespace-nowrap px-4 mb-2 md:mb-0 w-52 border-b md:border-r inline-block lg:table-cell lg:w-auto w-full text-center py-5">
+                <td className="align-baseline shrink-0 font-semibold whitespace-nowrap px-4 mb-2 md:mb-0  border-b md:border-r inline-block lg:table-cell lg:w-auto w-full text-center py-5">
                   休日・休暇
                 </td>
                 <td className="py-5 lg:px-10 px-4 text-gray-700 flex-grow whitespace-pre-line leading-7 inline-block lg:table-cell">
