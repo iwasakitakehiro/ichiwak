@@ -7,7 +7,6 @@ import "@splidejs/splide/css";
 
 export default function Job({ job }) {
   const router = useRouter();
-  let imgSrc = job.imageUrl ?? ["/images/AdobeStock_101676859.jpeg"];
   return (
     <>
       <div className="max-w-7xl lg:w-2/3 w-[90%] mx-auto my-36">
@@ -17,13 +16,13 @@ export default function Job({ job }) {
           </h1>
         </div>
         <div>
-          <Splide
-            options={{
-              autoplay: false,
-            }}
-          >
-            {imgSrc.length > 0 &&
-              imgSrc.map((item, index) => (
+          {job.imageUrl.length > 1 && (
+            <Splide
+              options={{
+                autoplay: false,
+              }}
+            >
+              {imgSrc.map((item, index) => (
                 <SplideSlide key={index} className="flex">
                   <Image
                     className="max-w-lg w-full m-auto"
@@ -32,7 +31,26 @@ export default function Job({ job }) {
                   />
                 </SplideSlide>
               ))}
-          </Splide>
+            </Splide>
+          )}
+          <div className="flex justify-center items-center">
+            {job.imageUrl.length === 1 && (
+              <Image
+                className="max-w-lg w-full m-auto"
+                src={job.imageUrl}
+                alt="main-img"
+              />
+            )}
+          </div>
+          <div className="flex justify-center items-center">
+            {job.imageUrl.length === 0 && (
+              <Image
+                className="max-w-lg w-full m-auto"
+                src="/images/AdobeStock_101676859.jpeg"
+                alt="main-img"
+              />
+            )}
+          </div>
         </div>
         <div className="bg-white border border-gray-200 my-12">
           <table className="divide-y divide-gray-200 w-full">

@@ -1,13 +1,6 @@
 import Cards from "@/components/card";
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Select,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, FormControl, Select } from "@chakra-ui/react";
 export const getServerSideProps = async () => {
   try {
     const response = await fetch(
@@ -19,7 +12,6 @@ export const getServerSideProps = async () => {
     const data = await response.json();
     return { props: { data } };
   } catch (error) {
-    // エラーログを出力することで、エラーの原因を特定しやすくします。
     console.error("Error fetching job list:", error);
     return { notFound: true };
   }
@@ -144,6 +136,7 @@ const List = ({ data }) => {
                   <option className="text-slate-400" value="">
                     職種
                   </option>
+                  <option value="Sales">営業</option>
                   <option value="Service">サービス業</option>
                   <option value="Construction">建設業</option>
                   <option value="hairSalon">美容室</option>

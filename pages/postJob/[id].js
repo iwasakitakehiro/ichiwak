@@ -79,6 +79,7 @@ export default function RegisterForm() {
       component: "Select",
       options: [
         { value: "", label: "選択してください" },
+        { value: "Sales", label: "営業" },
         { value: "Service", label: "サービス業" },
         { value: "Construction", label: "建設業" },
         { value: "hairSalon", label: "美容室" },

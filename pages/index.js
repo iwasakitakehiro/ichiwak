@@ -154,6 +154,7 @@ export default function Home() {
 
   const industries = [
     { name: "建設業", value: "Construction" },
+    { name: "営業", value: "Sales" },
     { name: "サービス業", value: "Service" },
     { name: "美容院", value: "hairSalon" },
     { name: "飲食業", value: "Restaurant" },

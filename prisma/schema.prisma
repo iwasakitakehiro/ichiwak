@@ -118,6 +118,7 @@ model Job {
 }
 
 enum IndustryType {
+  Sales
   Service
   Construction
   hairSalon
