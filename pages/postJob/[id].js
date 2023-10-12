@@ -236,9 +236,6 @@ export default function RegisterForm() {
       } else {
         data.imageUrl = [];
       }
-
-      console.log(data.imageUrl);
-
       const response = await fetch("/api/postJob", {
         method: "POST",
         headers: {

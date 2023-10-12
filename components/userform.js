@@ -195,15 +195,14 @@ export const Userform = ({ user }) => {
   // フォームが送信されたときの処理
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const imageFile = getValues("image").files; // react-hook-formのgetValuesを使用して値を取得
-      const url =
-        imageFile && imageFile.length > 0
-          ? await uploadPhoto(imageFile[0])
-          : null;
-
-      data.image = url;
+      if (data.image && data.image.length > 0) {
+        const url = await uploadPhoto(data.image);
+        data.image = url[0];
+      } else {
+        data.image = null;
+      }
       const response = await fetch(
-        `/api/updateUser?name=${data.name}&name=${data.id}&email=${user.email}`,
+        `/api/updateUser?name=${data.name}&email=${user.email}`,
         {
           method: "POST",
           headers: {
