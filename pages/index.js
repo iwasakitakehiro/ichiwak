@@ -43,7 +43,7 @@ export default function Home() {
   // 最初のマウント時にデータをフェッチ
   useEffect(() => {
     async function fetchData() {
-      const response = await fetch("/api/getJobList");
+      const response = await fetch("/api/getJobListAll");
       const data = await response.json();
       const initialData = data.filter((item) => item.region === "Ichihara");
       const initialData2 = data.filter(

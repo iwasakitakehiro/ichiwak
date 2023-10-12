@@ -141,7 +141,7 @@ export default function Header() {
                 </li>
                 <li>
                   <NextLink
-                    href="/discover"
+                    href="/discover/1"
                     className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 "
                   >
                     仕事を探す
@@ -180,7 +180,7 @@ export default function Header() {
                   </li>
                   <li>
                     <NextLink
-                      href="/discover"
+                      href="/discover/1"
                       className="block py-5 pr-4 pl-3 text-gray-700  text-left hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-green-500 lg:p-0 "
                       onClick={() => setMenuOpen(false)}
                     >
