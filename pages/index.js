@@ -260,7 +260,7 @@ export default function Home() {
                     <Box>
                       <video
                         ref={videoRef}
-                        src="https://ichiwak.s3.ap-southeast-2.amazonaws.com/sasahara_interview.mp4"
+                        src={item.videoUrl}
                         playsInline
                         controls
                         className="object-cover rounded h-full w-full cursor-pointer"

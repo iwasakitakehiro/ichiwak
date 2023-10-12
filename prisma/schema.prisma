@@ -102,6 +102,7 @@ model Job {
   type        JobType
   picked　　　 Boolean?
   imageUrl    String[] @default([])
+  videoUrl    String[] @default([])
   location_detail String? @db.Text
   start_time      String
   finish_time     String
