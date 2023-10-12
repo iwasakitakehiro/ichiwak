@@ -5,6 +5,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <link rel="icon" href="/favicon.ico" sizes="any" />
           <script
             async
             src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"

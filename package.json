@@ -30,6 +30,7 @@
     "react": "latest",
     "react-dom": "latest",
     "react-hook-form": "^7.46.2",
+    "react-media-recorder": "^1.6.6",
     "react-three-fiber": "^6.0.13"
   },
   "devDependencies": {

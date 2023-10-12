@@ -40,23 +40,24 @@ export default function Header() {
   const menuRef = useRef(null);
   // useEffect(() => {
   //   const handleOutsideClick = (event) => {
-  //     if (menuOpen && !event.target.dataset.id === "close") {
+  //     if (menuOpen) {
   //       setMenuOpen(false);
   //     }
-  //     if (menuOpen) {
-  //       document.addEventListener("mousedown", (e) => {
-  //         handleOutsideClick(e);
-  //       });
-  //     } else {
-  //       document.removeEventListener("mousedown", (e) => {
-  //         handleOutsideClick(e);
-  //       });
-  //     }
-  //     return () => {
-  //       document.removeEventListener("mousedown", (e) => {
-  //         handleOutsideClick(e);
-  //       });
-  //     };
+  //   };
+
+  //   if (menuOpen) {
+  //     document.addEventListener("mousedown", (e) => {
+  //       handleOutsideClick(e);
+  //     });
+  //   } else {
+  //     document.removeEventListener("mousedown", (e) => {
+  //       handleOutsideClick(e);
+  //     });
+  //   }
+  //   return () => {
+  //     document.removeEventListener("mousedown", (e) => {
+  //       handleOutsideClick(e);
+  //     });
   //   };
   // }, [menuOpen]);
 

@@ -7,10 +7,10 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import CardCompornent from "@/components/card";
 import NextLink from "next/link";
+import { Box, Flex, Image, Text } from "@chakra-ui/react";
 
 function Model() {
   const gltf = useGLTF("/glb/ichihara.glb");
-
   gltf.scene.position.z = -1;
   gltf.scene.position.y = 0.5;
   gltf.scene.traverse((child) => {
@@ -38,15 +38,22 @@ export default function Home() {
   const [mainData, setMainData] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
   const [selectedData2, setSelectedData2] = useState([]);
+  const [pickUpData, setPickUpData] = useState([]);
   const contentRef = useRef(null);
   // 最初のマウント時にデータをフェッチ
   useEffect(() => {
     async function fetchData() {
       const response = await fetch("/api/getJobList");
       const data = await response.json();
+      const initialData = data.filter((item) => item.region === "Ichihara");
+      const initialData2 = data.filter(
+        (item) => item.industry === "Construction"
+      );
+      const pickUp = data.filter((item) => item.picked === true);
+      setPickUpData(pickUp);
+      setSelectedData(initialData);
+      setSelectedData2(initialData2);
       setMainData(data);
-      setSelectedData(data);
-      setSelectedData2(data);
     }
     fetchData();
 
@@ -81,6 +88,10 @@ export default function Home() {
       });
     });
   }, []);
+
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const videoRef = useRef(null);
 
   const handleButtonClick = (event) => {
     const regionValue = event.target.value;
@@ -142,12 +153,13 @@ export default function Home() {
   ];
 
   const industries = [
-    { name: "サービス業", value: "Service" },
     { name: "建設業", value: "Construction" },
+    { name: "サービス業", value: "Service" },
     { name: "美容院", value: "hairSalon" },
     { name: "飲食業", value: "Restaurant" },
     { name: "保育", value: "Childcare" },
   ];
+
   return (
     <>
       <section>
@@ -233,6 +245,80 @@ export default function Home() {
             求人情報
           </h2>
         </div>
+        <div className="sm:mb-64 mb-24">
+          <h3 className="pb-10 sm:text-2xl text-base text-center font-bold fade-group">
+            ピックアップ求人
+          </h3>
+          <div className="fade-group">
+            {pickUpData.map((item) => {
+              return (
+                <div
+                  key={item}
+                  className="max-w-3xl w-11/12 mx-auto bg-white sm:py-12 py-6 sm:px-10 px-5 shadow-lg rounded-lg"
+                >
+                  <div className="sm:mb-10 mb-5 relative">
+                    <Box>
+                      <video
+                        ref={videoRef}
+                        src="https://ichiwak.s3.ap-southeast-2.amazonaws.com/sasahara_interview.mp4"
+                        playsInline
+                        controls
+                        className="object-cover rounded h-full w-full cursor-pointer"
+                      />
+                    </Box>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    {item.type === "FullTime" && (
+                      <p className="text-green-500 inline-block w-20 border border-green-500 text-center py-1 rounded text-xs">
+                        正社員
+                      </p>
+                    )}
+                    {item.type === "PartTime" && (
+                      <p className="text-orange-500 inline-block w-20 border border-orange-500 text-center py-1 rounded text-xs">
+                        アルバイト
+                      </p>
+                    )}
+                    {item.type === "Contract" && (
+                      <p className="text-blue-500 inline-block w-20 border border-blue-500 text-center py-1 rounded text-xs">
+                        派遣
+                      </p>
+                    )}
+                    <h2 className="text-lg font-semibold">
+                      {item.company.name}
+                    </h2>
+                    <p>
+                      {item.title.length > 30
+                        ? item.title.slice(0, 30) + "..."
+                        : item.title}
+                    </p>
+                    {item.type === "FullTime" && (
+                      <p>年収 : {item.salary}万円~</p>
+                    )}
+                    {item.type === "PartTime" && <p>時給 : {item.salary}円~</p>}
+                    {item.type === "Contract" && <p>時給 : {item.salary}円~</p>}
+                    <p>勤務地 : {item.location}</p>
+                  </div>
+                  <div className="p-4 flex justify-center">
+                    <NextLink
+                      className="bg-green-500 hover:bg-green-600 text-white rounded px-4 py-2 w-full text-center"
+                      href={`/jobs/${item.id}?company=${item.company.name}&title=${item.title}`}
+                    >
+                      求人詳細
+                    </NextLink>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex justify-center sm:my-20 my-10">
+            <NextLink
+              className="sm:text-lg text-sm w-64 text-center bg-green-500 text-white rounded-full py-4 hover:text-green-500 hover:bg-white border border-green-500"
+              href="/discover"
+            >
+              求人一覧へ
+            </NextLink>
+          </div>
+        </div>
         <div>
           <h3 className="pb-10 sm:text-2xl text-base text-center font-bold fade-group">
             地域から探す
@@ -243,7 +329,9 @@ export default function Home() {
                 key={region.value}
                 value={region.value}
                 onClick={handleButtonClick}
-                className="region-button w-36 text-sm text-center border border-solid rounded-full py-2 inline-block border-green-500 text-green-500 hover:bg-green-500 hover:text-white hover:transition-all"
+                className={`region-button w-36 text-sm text-center border border-solid rounded-full py-2 inline-block border-green-500 text-green-500 hover:bg-green-500 hover:text-white hover:transition-all ${
+                  region.value === "Ichihara" ? "region-active" : ""
+                }`}
               >
                 {region.name}
               </button>
@@ -264,7 +352,7 @@ export default function Home() {
               className="sm:text-lg text-sm w-64 text-center bg-green-500 text-white rounded-full py-4 hover:text-green-500 hover:bg-white border border-green-500"
               href="/discover"
             >
-              もっとみる
+              求人一覧へ
             </NextLink>
           </div>
         </div>
@@ -278,7 +366,9 @@ export default function Home() {
                 key={industry.value}
                 value={industry.value}
                 onClick={handleButtonClick2}
-                className="industry-button w-36 text-sm text-center border border-solid rounded-full py-2 inline-block border-green-500 text-green-500 hover:bg-green-500 hover:text-white hover:transition-all"
+                className={`industry-button w-36 text-sm text-center border border-solid rounded-full py-2 inline-block border-green-500 text-green-500 hover:bg-green-500 hover:text-white hover:transition-all ${
+                  industry.value === "Construction" ? "industry-active" : ""
+                }`}
               >
                 {industry.name}
               </button>
@@ -296,7 +386,7 @@ export default function Home() {
               className="sm:text-lg text-sm w-64 text-center bg-green-500 text-white rounded-full py-4 hover:text-green-500 hover:bg-white border border-green-500"
               href="/discover"
             >
-              もっとみる
+              求人一覧へ
             </NextLink>
           </div>
         </div>
