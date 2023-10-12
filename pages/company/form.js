@@ -80,8 +80,10 @@ export default function RegisterForm({ user }) {
         body: JSON.stringify(data),
       });
       const result = await response.json();
-      console.log(result);
       setMessage(result.message);
+      const timer = setTimeout(() => {
+        setMessage(null);
+      }, 3000);
     } catch (error) {
       console.error("Error inserting data:", error);
     }

@@ -54,7 +54,7 @@ export default function RegisterForm() {
       label: "求人名",
       name: "title",
       placeholder: "タイトル",
-      required: false,
+      required: true,
       requiredMessage: "必須項目です",
       component: "Input",
       type: "text",
@@ -62,7 +62,7 @@ export default function RegisterForm() {
     {
       label: "求人詳細",
       name: "description",
-      required: false,
+      required: true,
       requiredMessage: "",
       component: "Textarea",
       placeholder: `週休2日制（休日は土日祝日）
@@ -74,7 +74,7 @@ export default function RegisterForm() {
     {
       label: "職種",
       name: "industry",
-      required: false,
+      required: true,
       requiredMessage: "必須項目です",
       component: "Select",
       options: [
@@ -100,7 +100,7 @@ export default function RegisterForm() {
     {
       label: "雇用形態",
       name: "type",
-      required: false,
+      required: true,
       requiredMessage: "必須項目です",
       component: "Select",
       options: [
@@ -114,7 +114,7 @@ export default function RegisterForm() {
     {
       label: "地域",
       name: "region",
-      required: false,
+      required: true,
       requiredMessage: "必須項目です",
       component: "Select",
       options: [
@@ -136,7 +136,7 @@ export default function RegisterForm() {
     {
       label: "勤務地",
       name: "location",
-      required: false,
+      required: true,
       requiredMessage: "必須項目です",
       component: "Input",
       placeholder: "千葉県市原市市原1-1-1",
@@ -156,7 +156,7 @@ export default function RegisterForm() {
     {
       label: "勤務時間開始",
       name: "start_time",
-      required: false,
+      required: true,
       requiredMessage: "必須項目です",
       component: "Input",
       type: "time",
@@ -164,7 +164,7 @@ export default function RegisterForm() {
     {
       label: "勤務時間終了",
       name: "finish_time",
-      required: false,
+      required: true,
       requiredMessage: "必須項目です",
       component: "Input",
       type: "time",
@@ -183,7 +183,7 @@ export default function RegisterForm() {
     {
       label: "年収(アルバイトは時給)",
       name: "salary",
-      required: false,
+      required: true,
       requiredMessage: "必須項目です",
       component: "Input",
       placeholder: "500(数字だけ記入)",
@@ -232,7 +232,11 @@ export default function RegisterForm() {
       if (selectedFiles.length > 0) {
         const urls = await uploadPhoto(selectedFiles);
         data.imageUrl = urls;
+      } else {
+        data.imageUrl = [];
       }
+
+      console.log(data.imageUrl);
 
       const response = await fetch("/api/postJob", {
         method: "POST",
@@ -253,130 +257,135 @@ export default function RegisterForm() {
   });
 
   return (
-    <Box maxW="800px" w="80%" m="100px auto">
-      <form onSubmit={onSubmit}>
-        {Message && (
-          <div
-            className="fixed top-5 left-0 right-0 w-1/2 mx-auto rounded z-50 items-center bg-green-500 text-white text-sm font-bold px-4 py-3"
-            role="alert"
-          >
-            <p className="text-sm">{Message}</p>
-          </div>
-        )}
-        <FormControl>
-          <Input
-            id="companyId"
-            value={router.query.id}
-            type="hidden"
-            {...register("companyId", {
-              required: "必須項目です",
-            })}
-          />
-        </FormControl>
-        {formFields.map((field) => {
-          let Component;
-          if (field.component === "Textarea") {
-            Component = Textarea;
-          } else if (field.component === "Select") {
-            Component = Select;
-          } else {
-            Component = Input;
-          }
-          return (
-            <FormControl
-              key={field.name}
-              mb={5}
-              isRequired={field.required}
-              isInvalid={Boolean(errors[field.name])}
+    <div className="max-w-4xl mx-auto my-44 w-11/12">
+      <Box>
+        <form
+          className="bg-white w-full py-10 px-16 rounded-xl"
+          onSubmit={onSubmit}
+        >
+          {Message && (
+            <div
+              className="fixed top-5 left-0 right-0 w-1/2 mx-auto rounded z-50 items-center bg-green-500 text-white text-sm font-bold px-4 py-3"
+              role="alert"
             >
-              <FormLabel htmlFor={field.name}>{field.label}</FormLabel>
-              <FormErrorMessage>
-                {errors[field.name] && errors[field.name].message}
-              </FormErrorMessage>
-              {field.component !== "Select" ? (
-                <>
-                  {field.name === "imageUrl" ? (
-                    <>
+              <p className="text-sm">{Message}</p>
+            </div>
+          )}
+          <FormControl>
+            <Input
+              id="companyId"
+              value={router.query.id}
+              type="hidden"
+              {...register("companyId", {
+                required: "必須項目です",
+              })}
+            />
+          </FormControl>
+          {formFields.map((field) => {
+            let Component;
+            if (field.component === "Textarea") {
+              Component = Textarea;
+            } else if (field.component === "Select") {
+              Component = Select;
+            } else {
+              Component = Input;
+            }
+            return (
+              <FormControl
+                key={field.name}
+                mb={5}
+                isRequired={field.required}
+                isInvalid={Boolean(errors[field.name])}
+              >
+                <FormLabel htmlFor={field.name}>{field.label}</FormLabel>
+                <FormErrorMessage>
+                  {errors[field.name] && errors[field.name].message}
+                </FormErrorMessage>
+                {field.component !== "Select" ? (
+                  <>
+                    {field.name === "imageUrl" ? (
+                      <>
+                        <Component
+                          id={field.name}
+                          placeholder={field.placeholder}
+                          type={field.type}
+                          multiple={field.multiple}
+                          key={inputKey}
+                          {...register(field.name, {
+                            required: field.required
+                              ? field.requiredMessage
+                              : false,
+                            validate: field.validate,
+                          })}
+                          onChange={(e) => {
+                            handleImageChange(e);
+                            field.onChange && field.onChange(e);
+                          }}
+                        />
+                        <div className="preview">
+                          <p className="mb-3 mt-2 text-green-500">
+                            アップロードする画像
+                          </p>
+                          <div className="flex">
+                            {selectedFiles.map((file, index) => (
+                              <Image
+                                key={index}
+                                src={URL.createObjectURL(file)}
+                                alt={`Preview ${index}`}
+                                style={{
+                                  width: "auto",
+                                  height: "60px",
+                                  marginRight: "10px",
+                                }}
+                                onClick={() => handleImageRemove(index)}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </>
+                    ) : (
                       <Component
                         id={field.name}
                         placeholder={field.placeholder}
                         type={field.type}
-                        multiple={field.multiple}
-                        key={inputKey}
                         {...register(field.name, {
                           required: field.required
                             ? field.requiredMessage
                             : false,
-                          validate: field.validate,
                         })}
-                        onChange={(e) => {
-                          handleImageChange(e);
-                          field.onChange && field.onChange(e);
-                        }}
                       />
-                      <div className="preview">
-                        <p className="mb-3 mt-2 text-green-500">
-                          アップロードする画像
-                        </p>
-                        <div className="flex">
-                          {selectedFiles.map((file, index) => (
-                            <Image
-                              key={index}
-                              src={URL.createObjectURL(file)}
-                              alt={`Preview ${index}`}
-                              style={{
-                                width: "auto",
-                                height: "60px",
-                                marginRight: "10px",
-                              }}
-                              onClick={() => handleImageRemove(index)}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <Component
-                      id={field.name}
-                      placeholder={field.placeholder}
-                      type={field.type}
-                      {...register(field.name, {
-                        required: field.required
-                          ? field.requiredMessage
-                          : false,
-                      })}
-                    />
-                  )}
-                </>
-              ) : (
-                <Component
-                  id={field.name}
-                  {...register(field.name, {
-                    required: field.required ? field.requiredMessage : false,
-                  })}
-                >
-                  {field.options.map((option, index) => (
-                    <option key={index} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </Component>
-              )}
-            </FormControl>
-          );
-        })}
-        <Button
-          m="50px auto"
-          display="block"
-          w="150px"
-          colorScheme="green"
-          isLoading={isSubmitting}
-          type="submit"
-        >
-          送信
-        </Button>
-      </form>
-    </Box>
+                    )}
+                  </>
+                ) : (
+                  <Component
+                    id={field.name}
+                    {...register(field.name, {
+                      required: field.required ? field.requiredMessage : false,
+                    })}
+                  >
+                    {field.options.map((option, index) => (
+                      <option key={index} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </Component>
+                )}
+              </FormControl>
+            );
+          })}
+          <Button
+            m="50px auto"
+            display="block"
+            w="150px"
+            colorScheme="green"
+            isLoading={isSubmitting}
+            type="submit"
+          >
+            送信
+          </Button>
+        </form>
+      </Box>
+    </div>
   );
 }
 
