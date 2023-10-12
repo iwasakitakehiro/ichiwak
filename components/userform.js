@@ -21,6 +21,14 @@ export const Userform = ({ user }) => {
   const [Spouse, setSpouse] = useState(null);
   const { data: session, status, update } = useSession();
 
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(date.getDate()).padStart(2, "0")}`;
+  };
+
   const formFields = [
     {
       label: "氏名",
@@ -55,7 +63,7 @@ export const Userform = ({ user }) => {
       requiredMessage: "必須項目です",
       component: "Input",
       type: "date",
-      defaultValue: user ? user.birthday : "",
+      defaultValue: user && user.birthday ? formatDate(user.birthday) : "",
     },
     {
       label: "性別",
@@ -195,11 +203,11 @@ export const Userform = ({ user }) => {
   // フォームが送信されたときの処理
   const onSubmit = handleSubmit(async (data) => {
     try {
-      if (data.image && data.image.length > 0) {
+      if (data.image.length === 0 && user && user.image) {
+        data.image = user.image;
+      } else if (data.image && data.image.length > 0) {
         const url = await uploadPhoto(data.image);
         data.image = url[0];
-      } else {
-        data.image = null;
       }
       const response = await fetch(
         `/api/updateUser?name=${data.name}&email=${user.email}`,
