@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 
 class JobService {
   async fetchJobs(page, type, region, industry) {
-    const limit = 5;
+    const limit = 20;
     const skip = (page - 1) * limit;
 
     // 基本の検索条件
