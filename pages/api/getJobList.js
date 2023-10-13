@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 
 class JobService {
   async fetchJobs(page, type, region, industry) {
-    const limit = 20;
+    const limit = 5;
     const skip = (page - 1) * limit;
 
     // 基本の検索条件
@@ -33,7 +33,9 @@ class JobService {
       where: whereConditions,
     });
 
-    return { jobs, total, limit };
+    const totalPages = Math.ceil(total / limit);
+
+    return { jobs, total, limit, totalPages };
   }
 }
 
@@ -49,8 +51,8 @@ export default (req, res) => {
 
   return jobService
     .fetchJobs(page, type, region, industry)
-    .then(({ jobs, total, limit }) => {
-      res.status(200).json({ data: jobs, total, limit });
+    .then(({ jobs, total, limit, totalPages }) => {
+      res.status(200).json({ data: jobs, total, limit, totalPages });
     })
     .catch((error) => {
       res.status(400).json({ error: error.message });
