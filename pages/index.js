@@ -55,44 +55,46 @@ export default function Home() {
       setSelectedData2(initialData2);
       setMainData(data);
     }
-    fetchData();
 
-    const lines = document.querySelectorAll(".line");
-    let currentLine = 0;
+    const init = async () => {
+      // データのフェッチを待ちます
+      await fetchData();
 
-    lines[currentLine].classList.add("active");
-    const setActiveLine = (index) => {
-      lines.forEach((line) => line.classList.remove("active"));
-      lines[index].classList.add("active");
+      // スクロールアニメーションの設定
+      const lines = document.querySelectorAll(".line");
+      let currentLine = 0;
+      lines[currentLine].classList.add("active");
+      const setActiveLine = (index) => {
+        lines.forEach((line) => line.classList.remove("active"));
+        lines[index].classList.add("active");
+      };
+      setActiveLine(currentLine);
+
+      lines.forEach((line, index) => {
+        ScrollTrigger.create({
+          trigger: line,
+          start: "bottom center",
+          end: "bottom center",
+          onEnter: () => {
+            if (index < lines.length - 1) {
+              currentLine = index + 1;
+              setActiveLine(currentLine);
+            }
+          },
+          onEnterBack: () => {
+            if (index > 0) {
+              currentLine = index - 1;
+              setActiveLine(currentLine);
+            }
+          },
+        });
+      });
     };
 
-    setActiveLine(currentLine);
-
-    lines.forEach((line, index) => {
-      ScrollTrigger.create({
-        trigger: line,
-        start: "bottom center",
-        end: "bottom center",
-        onEnter: () => {
-          if (index < lines.length - 1) {
-            currentLine = index + 1;
-            setActiveLine(currentLine);
-          }
-        },
-        onEnterBack: () => {
-          if (index > 0) {
-            currentLine = index - 1;
-            setActiveLine(currentLine);
-          }
-        },
-      });
-    });
+    init();
   }, []);
 
-  const [isPlaying, setIsPlaying] = useState(false);
-
   const videoRef = useRef(null);
-
   const handleButtonClick = (event) => {
     const regionValue = event.target.value;
     const button = document.querySelector(".region-active");
@@ -242,7 +244,7 @@ export default function Home() {
       </section>
       <section>
         <div className="sm:mt-96 mt-64">
-          <h2 className="text-center font-bold sm:pb-56 pb-40 fade-group md:text-6xl text-5xl">
+          <h2 className="text-center font-bold sm:pb-56 pb-40 md:text-6xl text-5xl fade-group">
             求人情報
           </h2>
         </div>
@@ -321,10 +323,10 @@ export default function Home() {
           </div>
         </div>
         <div>
-          <h3 className="pb-10 sm:text-2xl text-base text-center font-bold fade-group">
+          <h3 className="pb-10 sm:text-2xl text-base text-center font-bold">
             地域から探す
           </h3>
-          <div className="text-lg leading-7 flex justify-center max-w-screen-xl mx-auto flex-wrap items-center gap-5 pb-10 fade-group">
+          <div className="text-lg leading-7 flex justify-center max-w-screen-xl mx-auto flex-wrap items-center gap-5 pb-10">
             {regions.map((region) => (
               <button
                 key={region.value}
@@ -339,7 +341,7 @@ export default function Home() {
             ))}
           </div>
           <div
-            className="min-h-[413px] flex justify-center items-center fade-group"
+            className="min-h-[413px] flex justify-center items-center"
             ref={contentRef}
           >
             {selectedData.length === 0 ? (
@@ -358,10 +360,10 @@ export default function Home() {
           </div>
         </div>
         <div className="mt-52">
-          <h3 className="pb-10 sm:text-2xl text-base text-center font-bold fade-group">
+          <h3 className="pb-10 sm:text-2xl text-base text-center font-bold">
             職種から探す
           </h3>
-          <div className="text-lg leading-7 flex justify-center max-w-screen-xl mx-auto flex-wrap items-center gap-5 pb-10 fade-group">
+          <div className="text-lg leading-7 flex justify-center max-w-screen-xl mx-auto flex-wrap items-center gap-5 pb-10">
             {industries.map((industry) => (
               <button
                 key={industry.value}
