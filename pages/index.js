@@ -9,6 +9,22 @@ import CardCompornent from "@/components/card";
 import NextLink from "next/link";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 
+export const getServerSideProps = async () => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/getJobListAll`
+    );
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    return { props: { data } };
+  } catch (error) {
+    console.error("Error fetching job list:", error);
+    return { notFound: true };
+  }
+};
+
 function Model() {
   const gltf = useGLTF("/glb/ichihara.glb");
   gltf.scene.position.z = -1;
@@ -33,7 +49,7 @@ function Model() {
   return <primitive object={gltf.scene} />;
 }
 
-export default function Home() {
+export default function Home({ data }) {
   const modelRef = useRef(null);
   const [mainData, setMainData] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
@@ -43,8 +59,6 @@ export default function Home() {
   // 最初のマウント時にデータをフェッチ
   useEffect(() => {
     async function fetchData() {
-      const response = await fetch("/api/getJobListAll");
-      const data = await response.json();
       const initialData = data.filter((item) => item.region === "Ichihara");
       const initialData2 = data.filter(
         (item) => item.industry === "Construction"
@@ -55,11 +69,9 @@ export default function Home() {
       setSelectedData2(initialData2);
       setMainData(data);
     }
-
     const init = async () => {
       // データのフェッチを待ちます
       await fetchData();
-
       // スクロールアニメーションの設定
       const lines = document.querySelectorAll(".line");
       let currentLine = 0;
@@ -316,7 +328,7 @@ export default function Home() {
           <div className="flex justify-center sm:my-20 my-10">
             <NextLink
               className="sm:text-lg text-sm w-64 text-center bg-green-500 text-white rounded-full py-4 hover:text-green-500 hover:bg-white border border-green-500"
-              href="/discover"
+              href="/discover/1"
             >
               求人一覧へ
             </NextLink>
@@ -353,7 +365,7 @@ export default function Home() {
           <div className="flex justify-center sm:my-20 my-10">
             <NextLink
               className="sm:text-lg text-sm w-64 text-center bg-green-500 text-white rounded-full py-4 hover:text-green-500 hover:bg-white border border-green-500"
-              href="/discover"
+              href="/discover/1"
             >
               求人一覧へ
             </NextLink>
@@ -387,7 +399,7 @@ export default function Home() {
           <div className="flex justify-center sm:my-20 my-10">
             <NextLink
               className="sm:text-lg text-sm w-64 text-center bg-green-500 text-white rounded-full py-4 hover:text-green-500 hover:bg-white border border-green-500"
-              href="/discover"
+              href="/discover/1"
             >
               求人一覧へ
             </NextLink>
