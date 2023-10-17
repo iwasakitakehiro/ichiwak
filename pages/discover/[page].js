@@ -48,53 +48,78 @@ const DiscoverPage = ({ data, total, limit, page }) => {
     industry: "",
   });
   const [jobdata, setData] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setData(data);
   }, [data]);
 
+  //検索条件のselectが変更されたらに内容を保存
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const toggle = () => {
-    setIsSubmitting(true);
+  //条件検索に合うデータとページネーション用のデータを取得
+  const fetchDataAndSetPages = async (page, queryParams) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/getJobList?page=${page}&${queryParams}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const newData = await response.json();
+
+      setData(newData.data);
+
+      const newTotalPages = Math.ceil(newData.total / newData.limit);
+      setPages([...Array(newTotalPages).keys()].map((i) => i + 1));
+    } catch (error) {
+      console.error("Error fetching job list:", error);
+    }
   };
 
-  const handleSubmit = (e) => {
+  //  空の値を持つクエリパラメータを除外する関数
+  const filterEmptyParams = (params) => {
+    const result = {};
+    for (const key in params) {
+      if (params[key] && params[key] !== "") {
+        result[key] = params[key];
+      }
+    }
+    return result;
+  };
+
+  //検索が押されたら条件に応じた内容をroute.pushして表示
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 1. 空の値を持つクエリパラメータを除外する関数
-    const filterEmptyParams = (params) => {
-      const result = {};
-      for (const key in params) {
-        if (params[key] && params[key] !== "") {
-          result[key] = params[key];
-        }
-      }
-      return result;
-    };
-
-    // 2. フィルタリングされたクエリパラメータのオブジェクトを作成
+    //  フィルタリングされたクエリパラメータのオブジェクトを作成
     const filteredParams = filterEmptyParams(formData);
 
-    // 3. URLSearchParamsを使用してクエリストリングを作成
+    // URLSearchParamsを使用してクエリストリングを作成
     const queryParams = new URLSearchParams(filteredParams).toString();
 
-    // 4. 指定された条件をクエリパラメータとしてページにリダイレクト
-    router.push(`/discover/1?${queryParams}`);
+    if (queryParams) {
+      router.push(`/discover/1?${queryParams}`);
+      await fetchDataAndSetPages(1, queryParams);
+    } else {
+      router.push(`/discover/1`);
+      await fetchDataAndSetPages(1, "");
+    }
   };
 
-  const handlePageChange = (p) => {
-    const filteredParams = {
+  //ページネーションのボタンが押されたときの機能
+  const handlePageChange = async (p) => {
+    const filteredParams = filterEmptyParams({
       type: router.query.type || "",
       region: router.query.region || "",
       industry: router.query.industry || "",
-    };
+    });
     const queryParams = new URLSearchParams(filteredParams).toString();
-    router.push(`/discover/${p}?${queryParams}`);
+
+    await fetchDataAndSetPages(p, queryParams);
+    router.push(`/discover/${p}${queryParams ? "?" + queryParams : ""}`);
   };
 
   return (
@@ -201,13 +226,22 @@ const DiscoverPage = ({ data, total, limit, page }) => {
         </div>
         <Cards job={jobdata}></Cards>
       </div>
-      {/* <div className="pagination flex justify-center space-x-4 mt-5">
+      <div className="pagination flex justify-center space-x-4 mt-5">
+        {page > 1 && (
+          <button
+            onClick={() => handlePageChange(page - 1)}
+            className="w-9 h-9 rounded-full text-sm bg-white border border-green-400 text-green-400"
+          >
+            &lt;
+          </button>
+        )}
+
         {pages.map((p) => (
           <button
             key={p}
             onClick={() => handlePageChange(p)}
             className={`w-9 h-9 rounded-full text-sm ${
-              page == p
+              page === p
                 ? "bg-green-400 text-white"
                 : "bg-white border border-green-400 text-green-400"
             }`}
@@ -215,7 +249,16 @@ const DiscoverPage = ({ data, total, limit, page }) => {
             {p}
           </button>
         ))}
-      </div> */}
+
+        {page < totalPages && (
+          <button
+            onClick={() => handlePageChange(page + 1)}
+            className="w-9 h-9 rounded-full text-sm bg-white border border-green-400 text-green-400"
+          >
+            &gt;
+          </button>
+        )}
+      </div>
     </>
   );
 };
