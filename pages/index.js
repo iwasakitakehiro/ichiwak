@@ -102,8 +102,11 @@ export default function Home({ data }) {
         });
       });
     };
-
     init();
+  }, []);
+
+  useEffect(() => {
+    gsap.to(".mv", { opacity: 1, duration: 1 });
   }, []);
 
   const videoRef = useRef(null);
@@ -177,10 +180,10 @@ export default function Home({ data }) {
 
   return (
     <>
-      <section>
+      <section className="mv opacity-0">
         <div className="flex flex-wrap mt-20 justify-center items-start  xl:h-screen relative fade-group">
           <div className="w-full md:w-2/3 lg:w-1/2 xl:w-1/3 md:h-full h-[400px] relative">
-            <Canvas className="w-full md:h-full  absolute top-0 left-0">
+            <Canvas className="w-full md:h-full absolute top-0 left-0">
               <ambientLight intensity={10} />
               <spotLight position={[0, 10, 10]} />
               <Model />
