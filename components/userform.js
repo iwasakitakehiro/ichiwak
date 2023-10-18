@@ -120,8 +120,8 @@ export const Userform = ({ user }) => {
       component: "Input",
       type: "text",
       defaultValue:
-        user && user.academicHistories.schoolName
-          ? user.academicHistories.schoolName
+        user.academicHistories[0] && user.academicHistories[0].schoolName
+          ? user.academicHistories[0].schoolName
           : "",
     },
     {
@@ -132,8 +132,8 @@ export const Userform = ({ user }) => {
       component: "Input",
       type: "text",
       defaultValue:
-        user && user.academicHistories.department
-          ? user.academicHistories.department
+        user.academicHistories[0] && user.academicHistories[0].department
+          ? user.academicHistories[0].department
           : "",
     },
     {
@@ -144,8 +144,8 @@ export const Userform = ({ user }) => {
       component: "Input",
       type: "text",
       defaultValue:
-        user && user.academicHistories.degree
-          ? user.academicHistories.degree
+        user.academicHistories[0] && user.academicHistories[0].degree
+          ? user.academicHistories[0].degree
           : "",
     },
     {
@@ -155,11 +155,12 @@ export const Userform = ({ user }) => {
       requiredMessage: "必須項目です",
       component: "Radio",
       type: "text",
-      defaultValue: user.academicHistories.graduation
-        ? user.academicHistories.graduation === true
-          ? "1"
-          : "0"
-        : "",
+      defaultValue:
+        user.academicHistories[0] && user.academicHistories[0].graduation
+          ? user.academicHistories[0].graduation === true
+            ? "1"
+            : "0"
+          : "",
       options: [
         { value: "1", label: "卒業" },
         { value: "0", label: "在学中" },
@@ -173,8 +174,8 @@ export const Userform = ({ user }) => {
       component: "Input",
       type: "month",
       defaultValue:
-        user && user.academicHistories.entryDate
-          ? user.academicHistories.entryDate.substring(0, 7)
+        user.academicHistories[0] && user.academicHistories[0].entryDate
+          ? user.academicHistories[0].entryDate.substring(0, 7)
           : "",
     },
     {
@@ -185,8 +186,8 @@ export const Userform = ({ user }) => {
       component: "Input",
       type: "month",
       defaultValue:
-        user && user.academicHistories.graduationDate
-          ? user.academicHistories.graduationDate.substring(0, 7)
+        user.academicHistories[0] && user.academicHistories[0].graduationDate
+          ? user.academicHistories[0].graduationDate.substring(0, 7)
           : "",
     },
   ];
