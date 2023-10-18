@@ -120,8 +120,8 @@ export const Userform = ({ user }) => {
       component: "Input",
       type: "text",
       defaultValue:
-        user && user.academicHistories[0].schoolName
-          ? user.academicHistories[0].schoolName
+        user && user.academicHistories.schoolName
+          ? user.academicHistories.schoolName
           : "",
     },
     {
@@ -132,8 +132,8 @@ export const Userform = ({ user }) => {
       component: "Input",
       type: "text",
       defaultValue:
-        user && user.academicHistories[0].department
-          ? user.academicHistories[0].department
+        user && user.academicHistories.department
+          ? user.academicHistories.department
           : "",
     },
     {
@@ -144,8 +144,8 @@ export const Userform = ({ user }) => {
       component: "Input",
       type: "text",
       defaultValue:
-        user && user.academicHistories[0].degree
-          ? user.academicHistories[0].degree
+        user && user.academicHistories.degree
+          ? user.academicHistories.degree
           : "",
     },
     {
@@ -155,8 +155,8 @@ export const Userform = ({ user }) => {
       requiredMessage: "必須項目です",
       component: "Radio",
       type: "text",
-      defaultValue: user.academicHistories[0].graduation
-        ? user.academicHistories[0].graduation === true
+      defaultValue: user.academicHistories.graduation
+        ? user.academicHistories.graduation === true
           ? "1"
           : "0"
         : "",
@@ -173,8 +173,8 @@ export const Userform = ({ user }) => {
       component: "Input",
       type: "month",
       defaultValue:
-        user && user.academicHistories[0].entryDate
-          ? user.academicHistories[0].entryDate.substring(0, 7)
+        user && user.academicHistories.entryDate
+          ? user.academicHistories.entryDate.substring(0, 7)
           : "",
     },
     {
@@ -185,8 +185,8 @@ export const Userform = ({ user }) => {
       component: "Input",
       type: "month",
       defaultValue:
-        user && user.academicHistories[0].graduationDate
-          ? user.academicHistories[0].graduationDate.substring(0, 7)
+        user && user.academicHistories.graduationDate
+          ? user.academicHistories.graduationDate.substring(0, 7)
           : "",
     },
   ];
@@ -205,20 +205,20 @@ export const Userform = ({ user }) => {
     try {
       if (data.image.length === 0 && user && user.image) {
         data.image = user.image;
+      } else if (data.image.length === 0 && user && !user.image) {
+        data.image = null;
       } else if (data.image && data.image.length > 0) {
         const url = await uploadPhoto(data.image);
         data.image = url[0];
       }
-      const response = await fetch(
-        `/api/updateUser?name=${data.name}&email=${user.email}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+
+      const response = await fetch(`/api/updateUser?email=${user.email}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
       const result = await response.json();
       setMessage(result.message);
       const timer = setTimeout(() => {
@@ -231,7 +231,7 @@ export const Userform = ({ user }) => {
   });
   return (
     <>
-      <div className="lg:w-1/2 w-[90%] mx-auto bg-white py-10 my-20 rounded-3xl">
+      <div className="lg:w-1/2 w-[90%] mx-auto bg-white py-10 my-20 rounded-3xl mt-48">
         <h2 className="text-center mt-20 text-xl font-bold">
           プロフィール編集
         </h2>
@@ -239,7 +239,7 @@ export const Userform = ({ user }) => {
           <form onSubmit={onSubmit}>
             {Message && (
               <div
-                className="fixed top-5 left-0 right-0 w-1/2 mx-auto rounded z-50 items-center bg-blue-500 text-white text-sm font-bold px-4 py-3"
+                className="fixed top-5 left-0 right-0 w-1/2 mx-auto rounded z-50 items-center bg-green-500 text-white text-sm font-bold px-4 py-3"
                 role="alert"
               >
                 <p className="text-sm">{Message}</p>

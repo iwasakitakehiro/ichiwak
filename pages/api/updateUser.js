@@ -25,15 +25,19 @@ export default async function handler(req, res) {
       const graduation_date =
         graduationDate === "" ? null : new Date(graduationDate);
 
-      const existingAcademicHistory = await prisma.academicHistory.findFirst({
+      const thisUser = await prisma.user.findFirst({
         where: {
-          userId: req.query.id,
+          email: req.query.email,
+        },
+        include: {
+          academicHistories: true,
         },
       });
-      if (existingAcademicHistory) {
+
+      if (thisUser.academicHistories[0]) {
         // 存在する場合は更新
         await prisma.academicHistory.update({
-          where: { id: existingAcademicHistory.id },
+          where: { id: thisUser.id },
           data: {
             entryDate: entry_date,
             graduationDate: graduation_date,
@@ -47,7 +51,7 @@ export default async function handler(req, res) {
         // 存在しない場合は作成
         await prisma.academicHistory.create({
           data: {
-            userId: req.query.email, // ここも同様に適切に変更する必要があります
+            userId: thisUser.id,
             entryDate: entry_date,
             graduationDate: graduation_date,
             schoolName: schoolName,
@@ -71,7 +75,6 @@ export default async function handler(req, res) {
           address: address,
           tel: tel,
           spouse: Boolean(spouse),
-          // academicHistoriesのupsertは削除
         },
       });
       return res
@@ -81,5 +84,5 @@ export default async function handler(req, res) {
       res.status(400).json({ error: error.message });
     }
   }
-  res.status(405).end(); // Method Not Allowed
+  res.status(405).end();
 }
