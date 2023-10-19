@@ -28,10 +28,24 @@ export default async function handler(req, res) {
         },
       });
       const send = await sendMail(
-        `ichiwak登録認証メール`,
+        `【ichiwak.com】ユーザー登録の認証を完了してください`,
         email,
         `
-        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/verify?token=${token}&message=register_complete">クリックして登録を完了してください</a>
+        <p>
+        こんにちは、${name}様、<br>
+
+        ichiwak.comへのご登録ありがとうございます。<br>
+        
+        以下のリンクをクリックして、アカウントの認証を完了してください。<br>
+        
+        <a href="${process.env.NEXT_PUBLIC_BASE_URL}/verify?token=${token}&message=register_complete">こちらをクリックすると認証が完了しますのでログインを開始してください</a><br>
+        
+        このリンクは24時間以内にクリックしてください。24時間を過ぎると無効となりますので、ご注意ください。<br>
+        
+        認証リンクに問題がある、またはこのメールに心当たりがない場合は、お手数ですがサポートまでお問い合わせください。<br>
+        
+        今後ともichiwak.comをよろしくお願いいたします。<br>
+        </p>
         `
       );
       return res.status(200).json({
